@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chicago Daycare Play Equipment Lead Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f1f5f9;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #064e3b;
+      color: white;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    header .logo { font-size: 1.6rem; }
+    header h1 { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+    header p  { font-size: 0.74rem; opacity: 0.75; margin-top: 2px; }
+
+    /* ── Body ── */
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 350px;
+      min-width: 350px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid #e2e8f0;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.06);
+      z-index: 5;
+    }
+
+    /* Controls */
+    .controls {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    .controls label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #475569;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: #1e293b;
+      background: #fff;
+      margin-bottom: 8px;
+    }
+    .search-input:focus { outline: 2px solid #059669; outline-offset: 1px; }
+
+    .controls select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      color: #1e293b;
+      background: #fff;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .controls select:focus { outline: 2px solid #059669; outline-offset: 1px; }
+
+    .notice {
+      font-size: 0.7rem;
+      color: #64748b;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 6px 8px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* Stats */
+    .stats {
+      padding: 10px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      gap: 8px;
+    }
+    .stat-card {
+      flex: 1;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 7px 4px;
+      border: 1px solid #e2e8f0;
+    }
+    .stat-card .num { font-size: 1.35rem; font-weight: 700; line-height: 1; }
+    .stat-card .lbl { font-size: 0.63rem; color: #64748b; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .s-total     .num { color: #064e3b; }
+    .s-high      .num { color: #dc2626; }
+    .s-contacted .num { color: #7c3aed; }
+
+    /* Legend */
+    .legend {
+      padding: 8px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.71rem;
+      color: #475569;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); }
+
+    /* Results header */
+    .results-header {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f8fafc;
+    }
+    .results-header span { font-size: 0.78rem; font-weight: 600; color: #475569; }
+    .results-header select {
+      font-size: 0.73rem;
+      padding: 3px 6px;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      color: #475569;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    /* Filter row */
+    .filter-row {
+      padding: 6px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .filter-row label {
+      font-size: 0.72rem;
+      color: #475569;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    input[type=checkbox] { accent-color: #064e3b; cursor: pointer; }
+
+    /* Daycare list */
+    .daycare-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .daycare-list::-webkit-scrollbar { width: 5px; }
+    .daycare-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+    .daycare-item {
+      padding: 9px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.1s;
+    }
+    .daycare-item:hover  { background: #f8fafc; }
+    .daycare-item.active { background: #ecfdf5; border-left: 3px solid #064e3b; padding-left: 11px; }
+
+    .item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .icon-high      { background: #dc2626; }
+    .icon-medium    { background: #d97706; }
+    .icon-low       { background: #16a34a; }
+    .icon-contacted { background: #7c3aed; }
+
+    .item-info { flex: 1; min-width: 0; }
+    .item-name {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-meta { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+
+    .badge {
+      font-size: 0.62rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .b-high      { background: #fee2e2; color: #991b1b; }
+    .b-medium    { background: #fef3c7; color: #92400e; }
+    .b-low       { background: #dcfce7; color: #166534; }
+    .b-contacted { background: #ede9fe; color: #6d28d9; }
+
+    /* Footer buttons */
+    .sidebar-footer {
+      padding: 10px 16px;
+      border-top: 1px solid #e2e8f0;
+      background: #f8fafc;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-footer {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      transition: all 0.15s;
+    }
+    .btn-footer:hover:not(:disabled) { background: #064e3b; color: #fff; border-color: #064e3b; }
+    .btn-footer:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Empty state */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      gap: 10px;
+      text-align: center;
+      padding: 0 24px;
+      line-height: 1.5;
+    }
+
+    /* Map */
+    #map { flex: 1; }
+
+    /* Loading overlay */
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.85);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      backdrop-filter: blur(2px);
+    }
+    .spinner {
+      width: 46px;
+      height: 46px;
+      border: 4px solid #e2e8f0;
+      border-top-color: #064e3b;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingText {
+      margin-top: 14px;
+      font-size: 0.88rem;
+      color: #475569;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">🛝</span>
+  <div>
+    <h1>Chicago Daycare Play Equipment Lead Finder</h1>
+    <p>Identify licensed daycare centers that may be due for new outdoor play equipment</p>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- ── Sidebar ── -->
+  <div class="sidebar">
+
+    <div class="controls">
+      <label for="searchInput">Search by name or address</label>
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="e.g. Little Stars, 123 Main…"
+        oninput="applyFilters()"
+      />
+
+      <label for="zipSelect">Filter by ZIP code</label>
+      <select id="zipSelect" onchange="applyFilters()">
+        <option value="">All ZIP codes</option>
+      </select>
+
+      <p class="notice">
+        🔴 <strong>High Priority</strong> — licensed 15+ years ago (equipment likely worn)<br>
+        🟠 <strong>Medium Priority</strong> — licensed 8–14 years ago<br>
+        🟢 <strong>Lower Priority</strong> — licensed within the last 8 years<br>
+        Data: City of Chicago licensed daycare centers (active licenses only).
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats" id="statsBar" style="display:none">
+      <div class="stat-card s-total">
+        <div class="num" id="statTotal">0</div>
+        <div class="lbl">Daycares</div>
+      </div>
+      <div class="stat-card s-high">
+        <div class="num" id="statHigh">0</div>
+        <div class="lbl">High Priority</div>
+      </div>
+      <div class="stat-card s-contacted">
+        <div class="num" id="statContacted">0</div>
+        <div class="lbl">Contacted</div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legendBar" style="display:none">
+      <div class="legend-item"><div class="dot" style="background:#dc2626"></div> High Priority</div>
+      <div class="legend-item"><div class="dot" style="background:#d97706"></div> Medium Priority</div>
+      <div class="legend-item"><div class="dot" style="background:#16a34a"></div> Lower Priority</div>
+      <div class="legend-item"><div class="dot" style="background:#7c3aed"></div> Contacted</div>
+    </div>
+
+    <!-- Results header -->
+    <div class="results-header" id="resultsHeader" style="display:none">
+      <span id="resultsCount">Results</span>
+      <select id="sortSelect" onchange="renderList()">
+        <option value="priority">Priority first</option>
+        <option value="age">Oldest first</option>
+        <option value="name">By name A–Z</option>
+      </select>
+    </div>
+
+    <!-- Filter row -->
+    <div class="filter-row" id="filterRow" style="display:none">
+      <label>
+        <input type="checkbox" id="chkHighOnly" onchange="renderList()" />
+        High priority only
+      </label>
+      <label>
+        <input type="checkbox" id="chkHideContacted" onchange="renderList()" />
+        Hide contacted
+      </label>
+    </div>
+
+    <!-- List -->
+    <div class="daycare-list" id="daycareList">
+      <div class="empty-state">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.4">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Loading daycare data from the City of Chicago…
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button class="btn-footer" id="exportBtn" onclick="exportCSV()" disabled>&#11015; Export CSV</button>
+      <button class="btn-footer" id="clearBtn" onclick="clearContacted()" disabled>Clear Contacts</button>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- ── Map ── -->
+  <div id="map"></div>
+
+</div><!-- /app-body -->
+
+<!-- Loading overlay -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <div id="loadingText">Loading Chicago daycare data…</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ─────────────────────────────────────────────────────
+   Config
+───────────────────────────────────────────────────── */
+const SOCRATA    = 'https://data.cityofchicago.org/resource';
+const BIZ_DS     = 'r2u4-wwk3';
+const CHI_CENTER = [41.8781, -87.6298];
+
+/* ─────────────────────────────────────────────────────
+   State
+───────────────────────────────────────────────────── */
+let allDaycares  = [];   // full dataset from API
+let filtered     = [];   // after search/zip filter
+let markers      = {};
+let contacted    = new Set(JSON.parse(localStorage.getItem('chi_dc_contacted') || '[]'));
+
+/* ─────────────────────────────────────────────────────
+   Map
+───────────────────────────────────────────────────── */
+const map = L.map('map').setView(CHI_CENTER, 11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+  maxZoom: 19,
+}).addTo(map);
+
+const markerLayer = L.layerGroup().addTo(map);
+
+/* ─────────────────────────────────────────────────────
+   Icons
+───────────────────────────────────────────────────── */
+const makeIcon = (color, size) => L.divIcon({
+  className: '',
+  html: `<div style="width:${size}px;height:${size}px;border-radius:50%;
+           background:${color};border:2px solid #fff;
+           box-shadow:0 1px 5px rgba(0,0,0,0.5)"></div>`,
+  iconSize:   [size, size],
+  iconAnchor: [size / 2, size / 2],
+});
+
+const ICONS = {
+  high:      makeIcon('#dc2626', 16),
+  medium:    makeIcon('#d97706', 13),
+  low:       makeIcon('#16a34a', 11),
+  contacted: makeIcon('#7c3aed', 13),
+};
+
+/* ─────────────────────────────────────────────────────
+   Priority logic
+   High   = licensed 15+ years ago
+   Medium = 8–14 years ago
+   Low    = under 8 years ago
+───────────────────────────────────────────────────── */
+function getPriority(d) {
+  if (!d.license_start_date) return 'medium';
+  const yrs = (Date.now() - new Date(d.license_start_date)) / (365.25 * 24 * 3600 * 1000);
+  if (yrs >= 15) return 'high';
+  if (yrs >= 8)  return 'medium';
+  return 'low';
+}
+
+function yearsAgo(dateStr) {
+  if (!dateStr) return null;
+  return Math.floor((Date.now() - new Date(dateStr)) / (365.25 * 24 * 3600 * 1000));
+}
+
+/* ─────────────────────────────────────────────────────
+   Load all daycare data on startup
+───────────────────────────────────────────────────── */
+async function loadAllDaycares() {
+  showLoading('Loading Chicago daycare data…');
+  try {
+    const where = encodeURIComponent(
+      "license_description like '%DAY CARE%' AND license_status='AAI' AND latitude IS NOT NULL"
+    );
+    const fields = 'id,legal_name,doing_business_as_name,address,city,zip_code,' +
+                   'latitude,longitude,license_start_date,expiration_date,license_description,ward';
+    const url = `${SOCRATA}/${BIZ_DS}.json?$where=${where}&$select=${fields}&$limit=3000&$order=license_start_date ASC`;
+
+    const raw  = await apiFetch(url);
+    const valid = raw.filter(d => d.latitude && d.longitude);
+
+    allDaycares = valid.map(d => ({
+      ...d,
+      priority:  getPriority(d),
+      contacted: contacted.has(d.id),
+    }));
+
+    populateZipFilter();
+    applyFilters();
+    updateStats();
+
+    // Show UI elements
+    ['statsBar', 'legendBar', 'resultsHeader', 'filterRow'].forEach(id => {
+      document.getElementById(id).style.display = 'flex';
+    });
+    document.getElementById('exportBtn').disabled = false;
+    document.getElementById('clearBtn').disabled  = false;
+
+  } catch (e) {
+    console.error(e);
+    setList(`<div class="empty-state">
+      Failed to load data.<br>
+      <small style="color:#94a3b8;font-size:0.75rem">Check your internet connection and try refreshing.</small>
+    </div>`);
+  } finally {
+    hideLoading();
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   Populate ZIP dropdown from loaded data
+───────────────────────────────────────────────────── */
+function populateZipFilter() {
+  const zips = [...new Set(allDaycares.map(d => (d.zip_code || '').trim()).filter(Boolean))].sort();
+  const sel  = document.getElementById('zipSelect');
+  sel.innerHTML = '<option value="">All ZIP codes</option>';
+  zips.forEach(z => {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = z;
+    sel.appendChild(opt);
+  });
+}
+
+/* ─────────────────────────────────────────────────────
+   Apply search + ZIP filters → update map & list
+───────────────────────────────────────────────────── */
+function applyFilters() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const zip   = document.getElementById('zipSelect').value.trim();
+
+  filtered = allDaycares.filter(d => {
+    const name = (d.doing_business_as_name || d.legal_name || '').toLowerCase();
+    const addr = (d.address || '').toLowerCase();
+    const matchSearch = !query || name.includes(query) || addr.includes(query);
+    const matchZip    = !zip   || (d.zip_code || '').trim() === zip;
+    return matchSearch && matchZip;
+  });
+
+  renderMarkers();
+  renderList();
+  updateStats();
+}
+
+/* ─────────────────────────────────────────────────────
+   Render map markers
+───────────────────────────────────────────────────── */
+function renderMarkers() {
+  markerLayer.clearLayers();
+  markers = {};
+
+  // Sort so high-priority renders on top (added last)
+  const sorted = [...filtered].sort((a, b) => {
+    const order = { low: 0, medium: 1, high: 2 };
+    return order[a.priority] - order[b.priority];
+  });
+
+  for (const d of sorted) {
+    const icon = d.contacted ? ICONS.contacted : ICONS[d.priority];
+    const m    = L.marker([+d.latitude, +d.longitude], { icon });
+    m.on('click', () => selectDaycare(d.id));
+    m.addTo(markerLayer);
+    markers[d.id] = m;
+  }
+}
+
+/* ─────────────────────────────────────────────────────
+   Render sidebar list
+───────────────────────────────────────────────────── */
+function renderList() {
+  const sort        = document.getElementById('sortSelect')?.value || 'priority';
+  const highOnly    = document.getElementById('chkHighOnly')?.checked;
+  const hideContacted = document.getElementById('chkHideContacted')?.checked;
+
+  let list = [...filtered];
+  if (highOnly)      list = list.filter(d => d.priority === 'high');
+  if (hideContacted) list = list.filter(d => !d.contacted);
+
+  const priOrder = { high: 0, medium: 1, low: 2 };
+  if (sort === 'priority') list.sort((a, b) => priOrder[a.priority] - priOrder[b.priority]);
+  if (sort === 'age')      list.sort((a, b) => new Date(a.license_start_date) - new Date(b.license_start_date));
+  if (sort === 'name')     list.sort((a, b) => name(a).localeCompare(name(b)));
+
+  document.getElementById('resultsCount').textContent = `${list.length} result${list.length !== 1 ? 's' : ''}`;
+
+  if (!list.length) {
+    setList('<div class="empty-state">No daycares match the current filters.</div>');
+    return;
+  }
+
+  setList(list.map(d => {
+    const n   = name(d);
+    const pri = d.contacted ? 'contacted' : d.priority;
+    const yrs = yearsAgo(d.license_start_date);
+    const yrsTxt = yrs !== null ? `${yrs} yr${yrs !== 1 ? 's' : ''} old` : 'Date unknown';
+
+    const iconClass  = { high: 'icon-high', medium: 'icon-medium', low: 'icon-low', contacted: 'icon-contacted' }[pri];
+    const iconChar   = { high: '!', medium: '~', low: '✓', contacted: '✓' }[pri];
+    const badgeClass = { high: 'b-high', medium: 'b-medium', low: 'b-low', contacted: 'b-contacted' }[pri];
+    const badgeText  = { high: 'High', medium: 'Medium', low: 'Low', contacted: 'Contacted' }[pri];
+
+    return `<div class="daycare-item" id="item-${d.id}" onclick="selectDaycare('${d.id}')">
+      <div class="item-icon ${iconClass}">${iconChar}</div>
+      <div class="item-info">
+        <div class="item-name">${titleCase(n)}</div>
+        <div class="item-meta">${d.address || ''} &middot; ${yrsTxt}</div>
+      </div>
+      <span class="badge ${badgeClass}">${badgeText}</span>
+    </div>`;
+  }).join(''));
+}
+
+/* ─────────────────────────────────────────────────────
+   Select / highlight a daycare
+───────────────────────────────────────────────────── */
+function selectDaycare(id) {
+  const d = allDaycares.find(x => x.id === id);
+  if (!d) return;
+
+  document.querySelectorAll('.daycare-item').forEach(el => el.classList.remove('active'));
+  const item = document.getElementById(`item-${id}`);
+  if (item) { item.classList.add('active'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  const marker = markers[id];
+  if (!marker) return;
+  map.panTo(marker.getLatLng(), { animate: true });
+
+  const n    = titleCase(name(d));
+  const yrs  = yearsAgo(d.license_start_date);
+  const yr   = d.license_start_date ? new Date(d.license_start_date).getFullYear() : 'N/A';
+  const exp  = d.expiration_date ? new Date(d.expiration_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A';
+
+  const priBg  = { high: '#fee2e2', medium: '#fef3c7', low: '#dcfce7' }[d.priority] || '#f1f5f9';
+  const priFg  = { high: '#991b1b', medium: '#92400e', low: '#166534' }[d.priority] || '#475569';
+  const priMsg = {
+    high:   '&#x26A0; High Priority — likely needs new play equipment',
+    medium: '&#128997; Medium Priority — worth a quote',
+    low:    '&#9989; Lower Priority — newer facility',
+  }[d.priority] || '';
+
+  const btnHtml = d.contacted
+    ? `<button onclick="unmark('${id}')" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;
+         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:4px">
+         &#8617; Unmark contacted</button>`
+    : `<button onclick="mark('${id}')" style="background:#7c3aed;color:#fff;border:none;
+         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:4px">
+         &#10003; Mark as contacted</button>`;
+
+  marker.bindPopup(`
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:230px;max-width:280px">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:3px;color:#1e293b">${n}</div>
+      <div style="font-size:0.77rem;color:#64748b;margin-bottom:10px">${d.address || ''}, Chicago IL ${d.zip_code || ''}</div>
+
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:5px">
+        <span style="color:#64748b">Licensed since</span>
+        <span style="font-weight:600">${yr}${yrs !== null ? ` (${yrs} yrs ago)` : ''}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:10px">
+        <span style="color:#64748b">License expires</span>
+        <span style="font-weight:600">${exp}</span>
+      </div>
+
+      <div style="font-size:0.8rem;padding:7px 9px;border-radius:6px;
+                  background:${priBg};color:${priFg};margin-bottom:8px;font-weight:500">
+        ${priMsg}
+      </div>
+      ${btnHtml}
+    </div>
+  `, { maxWidth: 300 }).openPopup();
+}
+
+/* ─────────────────────────────────────────────────────
+   Contact tracking
+───────────────────────────────────────────────────── */
+function mark(id) {
+  contacted.add(id);
+  saveContacted();
+  patch(id, { contacted: true });
+}
+
+function unmark(id) {
+  contacted.delete(id);
+  saveContacted();
+  patch(id, { contacted: false });
+}
+
+function patch(id, changes) {
+  const i = allDaycares.findIndex(d => d.id === id);
+  if (i < 0) return;
+  allDaycares[i] = { ...allDaycares[i], ...changes };
+
+  const j = filtered.findIndex(d => d.id === id);
+  if (j >= 0) filtered[j] = { ...filtered[j], ...changes };
+
+  const d = allDaycares[i];
+  const m = markers[id];
+  if (m) m.setIcon(d.contacted ? ICONS.contacted : ICONS[d.priority]);
+
+  renderList();
+  updateStats();
+  map.closePopup();
+  setTimeout(() => selectDaycare(id), 80);
+}
+
+function saveContacted() {
+  localStorage.setItem('chi_dc_contacted', JSON.stringify([...contacted]));
+}
+
+function clearContacted() {
+  if (!confirm('Clear all "contacted" markers?')) return;
+  contacted = new Set();
+  saveContacted();
+  allDaycares = allDaycares.map(d => ({ ...d, contacted: false }));
+  filtered    = filtered.map(d => ({ ...d, contacted: false }));
+  renderMarkers();
+  renderList();
+  updateStats();
+}
+
+/* ─────────────────────────────────────────────────────
+   Export CSV
+───────────────────────────────────────────────────── */
+function exportCSV() {
+  const highOnly = document.getElementById('chkHighOnly')?.checked;
+  let rows = (highOnly ? filtered.filter(d => d.priority === 'high') : filtered);
+
+  const csv = [
+    '"Name","Address","ZIP","License Start Year","Years Active","Priority","Contacted","Latitude","Longitude"',
+    ...rows.map(d => [
+      name(d),
+      d.address || '',
+      d.zip_code || '',
+      d.license_start_date ? new Date(d.license_start_date).getFullYear() : '',
+      yearsAgo(d.license_start_date) ?? '',
+      d.priority,
+      d.contacted ? 'Yes' : 'No',
+      d.latitude || '',
+      d.longitude || '',
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+  ].join('\r\n');
+
+  const zip   = document.getElementById('zipSelect').value || 'All';
+  const a     = document.createElement('a');
+  a.href      = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download  = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ─────────────────────────────────────────────────────
+   Stats
+───────────────────────────────────────────────────── */
+function updateStats() {
+  document.getElementById('statTotal').textContent     = filtered.length;
+  document.getElementById('statHigh').textContent      = filtered.filter(d => d.priority === 'high').length;
+  document.getElementById('statContacted').textContent = allDaycares.filter(d => d.contacted).length;
+}
+
+/* ─────────────────────────────────────────────────────
+   Helpers
+───────────────────────────────────────────────────── */
+async function apiFetch(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
+  return res.json();
+}
+
+function name(d) {
+  return d.doing_business_as_name || d.legal_name || 'Unknown';
+}
+
+function titleCase(s) {
+  return s ? s.toLowerCase().replace(/\b([a-z])/g, c => c.toUpperCase()) : '';
+}
+
+function setList(html) {
+  document.getElementById('daycareList').innerHTML = html;
+}
+
+function showLoading(msg) {
+  document.getElementById('loadingOverlay').style.display = 'flex';
+  document.getElementById('loadingText').textContent = msg;
+}
+
+function hideLoading() {
+  document.getElementById('loadingOverlay').style.display = 'none';
+}
+
+/* ─────────────────────────────────────────────────────
+   Init
+───────────────────────────────────────────────────── */
+showLoading('Loading Chicago daycare data…');
+loadAllDaycares();
+</script>
+</body>
+</html>
