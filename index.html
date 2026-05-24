@@ -34,11 +34,7 @@
     header p  { font-size: 0.74rem; opacity: 0.75; margin-top: 2px; }
 
     /* ── Body ── */
-    .app-body {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    .app-body { display: flex; flex: 1; overflow: hidden; }
 
     /* ── Sidebar ── */
     .sidebar {
@@ -179,10 +175,7 @@
     input[type=checkbox] { accent-color: #064e3b; cursor: pointer; }
 
     /* Daycare list */
-    .daycare-list {
-      flex: 1;
-      overflow-y: auto;
-    }
+    .daycare-list { flex: 1; overflow-y: auto; }
     .daycare-list::-webkit-scrollbar { width: 5px; }
     .daycare-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
@@ -312,10 +305,10 @@
 <body>
 
 <header>
-  <span class="logo">🛝</span>
+  <span class="logo">&#x1F6DD;</span>
   <div>
     <h1>Chicago Daycare Play Equipment Lead Finder</h1>
-    <p>Identify licensed daycare centers that may be due for new outdoor play equipment</p>
+    <p>Identify Chicago early learning programs in need of new outdoor play equipment</p>
   </div>
 </header>
 
@@ -330,7 +323,7 @@
         type="text"
         id="searchInput"
         class="search-input"
-        placeholder="e.g. Little Stars, 123 Main…"
+        placeholder="e.g. Little Stars, 3800 N Austin…"
         oninput="applyFilters()"
       />
 
@@ -340,10 +333,10 @@
       </select>
 
       <p class="notice">
-        🔴 <strong>High Priority</strong> — licensed 15+ years ago (equipment likely worn)<br>
-        🟠 <strong>Medium Priority</strong> — licensed 8–14 years ago<br>
-        🟢 <strong>Lower Priority</strong> — licensed within the last 8 years<br>
-        Data: City of Chicago licensed daycare centers (active licenses only).
+        &#x1F534; <strong>High Priority</strong> &mdash; basic license only (equipment likely needs upgrade)<br>
+        &#x1F7E0; <strong>Medium Priority</strong> &mdash; Bronze quality rating<br>
+        &#x1F7E2; <strong>Lower Priority</strong> &mdash; Silver or Gold rated (already investing)<br>
+        Source: City of Chicago Early Learning Programs. Click any marker for phone &amp; details.
       </p>
     </div>
 
@@ -351,7 +344,7 @@
     <div class="stats" id="statsBar" style="display:none">
       <div class="stat-card s-total">
         <div class="num" id="statTotal">0</div>
-        <div class="lbl">Daycares</div>
+        <div class="lbl">Programs</div>
       </div>
       <div class="stat-card s-high">
         <div class="num" id="statHigh">0</div>
@@ -366,8 +359,8 @@
     <!-- Legend -->
     <div class="legend" id="legendBar" style="display:none">
       <div class="legend-item"><div class="dot" style="background:#dc2626"></div> High Priority</div>
-      <div class="legend-item"><div class="dot" style="background:#d97706"></div> Medium Priority</div>
-      <div class="legend-item"><div class="dot" style="background:#16a34a"></div> Lower Priority</div>
+      <div class="legend-item"><div class="dot" style="background:#d97706"></div> Medium (Bronze)</div>
+      <div class="legend-item"><div class="dot" style="background:#16a34a"></div> Lower (Silver/Gold)</div>
       <div class="legend-item"><div class="dot" style="background:#7c3aed"></div> Contacted</div>
     </div>
 
@@ -376,8 +369,8 @@
       <span id="resultsCount">Results</span>
       <select id="sortSelect" onchange="renderList()">
         <option value="priority">Priority first</option>
-        <option value="age">Oldest first</option>
-        <option value="name">By name A–Z</option>
+        <option value="name">By name A&ndash;Z</option>
+        <option value="zip">By ZIP code</option>
       </select>
     </div>
 
@@ -399,7 +392,7 @@
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.4">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        Loading daycare data from the City of Chicago…
+        Loading Chicago early learning data&hellip;
       </div>
     </div>
 
@@ -419,7 +412,7 @@
 <!-- Loading overlay -->
 <div id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingText">Loading Chicago daycare data…</div>
+  <div id="loadingText">Loading Chicago early learning data&hellip;</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -427,20 +420,19 @@
 /* ─────────────────────────────────────────────────────
    Config
 ───────────────────────────────────────────────────── */
-const SOCRATA    = 'https://data.cityofchicago.org/resource';
-const BIZ_DS     = 'r2u4-wwk3';
+const API_URL    = 'https://data.cityofchicago.org/resource/ck29-hb9r.json';
 const CHI_CENTER = [41.8781, -87.6298];
 
 /* ─────────────────────────────────────────────────────
    State
 ───────────────────────────────────────────────────── */
-let allDaycares  = [];   // full dataset from API
-let filtered     = [];   // after search/zip filter
-let markers      = {};
-let contacted    = new Set(JSON.parse(localStorage.getItem('chi_dc_contacted') || '[]'));
+let allPrograms = [];
+let filtered    = [];
+let markers     = {};
+let contacted   = new Set(JSON.parse(localStorage.getItem('chi_dc_v2_contacted') || '[]'));
 
 /* ─────────────────────────────────────────────────────
-   Map
+   Map setup
 ───────────────────────────────────────────────────── */
 const map = L.map('map').setView(CHI_CENTER, 11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -470,51 +462,39 @@ const ICONS = {
 };
 
 /* ─────────────────────────────────────────────────────
-   Priority logic
-   High   = licensed 15+ years ago
-   Medium = 8–14 years ago
-   Low    = under 8 years ago
+   Priority based on quality_rating:
+   Licensed / Coming Soon  → high
+   Bronze                  → medium
+   Silver / Gold           → low
 ───────────────────────────────────────────────────── */
-function getPriority(d) {
-  if (!d.license_start_date) return 'medium';
-  const yrs = (Date.now() - new Date(d.license_start_date)) / (365.25 * 24 * 3600 * 1000);
-  if (yrs >= 15) return 'high';
-  if (yrs >= 8)  return 'medium';
-  return 'low';
-}
-
-function yearsAgo(dateStr) {
-  if (!dateStr) return null;
-  return Math.floor((Date.now() - new Date(dateStr)) / (365.25 * 24 * 3600 * 1000));
+function getPriority(rating) {
+  const r = (rating || '').toLowerCase();
+  if (r === 'bronze')               return 'medium';
+  if (r === 'silver' || r === 'gold') return 'low';
+  return 'high';
 }
 
 /* ─────────────────────────────────────────────────────
-   Load all daycare data on startup
+   Load all programs on startup
 ───────────────────────────────────────────────────── */
-async function loadAllDaycares() {
-  showLoading('Loading Chicago daycare data…');
+async function loadAll() {
+  showLoading('Loading Chicago early learning programs…');
   try {
-    const where = encodeURIComponent(
-      "license_description like '%DAY CARE%' AND license_status='AAI' AND latitude IS NOT NULL"
-    );
-    const fields = 'id,legal_name,doing_business_as_name,address,city,zip_code,' +
-                   'latitude,longitude,license_start_date,expiration_date,license_description,ward';
-    const url = `${SOCRATA}/${BIZ_DS}.json?$where=${where}&$select=${fields}&$limit=3000&$order=license_start_date ASC`;
+    const url = API_URL + '?$limit=1000&$where=latitude IS NOT NULL';
+    const raw = await apiFetch(url);
 
-    const raw  = await apiFetch(url);
-    const valid = raw.filter(d => d.latitude && d.longitude);
-
-    allDaycares = valid.map(d => ({
-      ...d,
-      priority:  getPriority(d),
-      contacted: contacted.has(d.id),
-    }));
+    allPrograms = raw
+      .filter(d => d.latitude && d.longitude)
+      .map(d => ({
+        ...d,
+        priority:  getPriority(d.quality_rating),
+        contacted: contacted.has(d.key),
+      }));
 
     populateZipFilter();
     applyFilters();
     updateStats();
 
-    // Show UI elements
     ['statsBar', 'legendBar', 'resultsHeader', 'filterRow'].forEach(id => {
       document.getElementById(id).style.display = 'flex';
     });
@@ -524,8 +504,7 @@ async function loadAllDaycares() {
   } catch (e) {
     console.error(e);
     setList(`<div class="empty-state">
-      Failed to load data.<br>
-      <small style="color:#94a3b8;font-size:0.75rem">Check your internet connection and try refreshing.</small>
+      Failed to load data. Check your internet connection and try refreshing.
     </div>`);
   } finally {
     hideLoading();
@@ -536,7 +515,7 @@ async function loadAllDaycares() {
    Populate ZIP dropdown from loaded data
 ───────────────────────────────────────────────────── */
 function populateZipFilter() {
-  const zips = [...new Set(allDaycares.map(d => (d.zip_code || '').trim()).filter(Boolean))].sort();
+  const zips = [...new Set(allPrograms.map(d => (d.zip || '').trim()).filter(Boolean))].sort();
   const sel  = document.getElementById('zipSelect');
   sel.innerHTML = '<option value="">All ZIP codes</option>';
   zips.forEach(z => {
@@ -547,17 +526,17 @@ function populateZipFilter() {
 }
 
 /* ─────────────────────────────────────────────────────
-   Apply search + ZIP filters → update map & list
+   Apply search + ZIP filters
 ───────────────────────────────────────────────────── */
 function applyFilters() {
   const query = document.getElementById('searchInput').value.trim().toLowerCase();
   const zip   = document.getElementById('zipSelect').value.trim();
 
-  filtered = allDaycares.filter(d => {
-    const name = (d.doing_business_as_name || d.legal_name || '').toLowerCase();
-    const addr = (d.address || '').toLowerCase();
+  filtered = allPrograms.filter(d => {
+    const name = (d.site_name || '').toLowerCase();
+    const addr = (d.address   || '').toLowerCase();
     const matchSearch = !query || name.includes(query) || addr.includes(query);
-    const matchZip    = !zip   || (d.zip_code || '').trim() === zip;
+    const matchZip    = !zip   || (d.zip || '').trim() === zip;
     return matchSearch && matchZip;
   });
 
@@ -573,18 +552,18 @@ function renderMarkers() {
   markerLayer.clearLayers();
   markers = {};
 
-  // Sort so high-priority renders on top (added last)
+  // Render low → high so high-priority dots appear on top
   const sorted = [...filtered].sort((a, b) => {
-    const order = { low: 0, medium: 1, high: 2 };
-    return order[a.priority] - order[b.priority];
+    const o = { low: 0, medium: 1, high: 2 };
+    return o[a.priority] - o[b.priority];
   });
 
   for (const d of sorted) {
     const icon = d.contacted ? ICONS.contacted : ICONS[d.priority];
     const m    = L.marker([+d.latitude, +d.longitude], { icon });
-    m.on('click', () => selectDaycare(d.id));
+    m.on('click', () => selectProgram(d.key));
     m.addTo(markerLayer);
-    markers[d.id] = m;
+    markers[d.key] = m;
   }
 }
 
@@ -592,8 +571,8 @@ function renderMarkers() {
    Render sidebar list
 ───────────────────────────────────────────────────── */
 function renderList() {
-  const sort        = document.getElementById('sortSelect')?.value || 'priority';
-  const highOnly    = document.getElementById('chkHighOnly')?.checked;
+  const sort          = document.getElementById('sortSelect')?.value || 'priority';
+  const highOnly      = document.getElementById('chkHighOnly')?.checked;
   const hideContacted = document.getElementById('chkHideContacted')?.checked;
 
   let list = [...filtered];
@@ -602,140 +581,142 @@ function renderList() {
 
   const priOrder = { high: 0, medium: 1, low: 2 };
   if (sort === 'priority') list.sort((a, b) => priOrder[a.priority] - priOrder[b.priority]);
-  if (sort === 'age')      list.sort((a, b) => new Date(a.license_start_date) - new Date(b.license_start_date));
-  if (sort === 'name')     list.sort((a, b) => name(a).localeCompare(name(b)));
+  if (sort === 'name')     list.sort((a, b) => (a.site_name || '').localeCompare(b.site_name || ''));
+  if (sort === 'zip')      list.sort((a, b) => (a.zip || '').localeCompare(b.zip || ''));
 
-  document.getElementById('resultsCount').textContent = `${list.length} result${list.length !== 1 ? 's' : ''}`;
+  document.getElementById('resultsCount').textContent =
+    `${list.length} result${list.length !== 1 ? 's' : ''}`;
 
   if (!list.length) {
-    setList('<div class="empty-state">No daycares match the current filters.</div>');
+    setList('<div class="empty-state">No programs match the current filters.</div>');
     return;
   }
 
   setList(list.map(d => {
-    const n   = name(d);
-    const pri = d.contacted ? 'contacted' : d.priority;
-    const yrs = yearsAgo(d.license_start_date);
-    const yrsTxt = yrs !== null ? `${yrs} yr${yrs !== 1 ? 's' : ''} old` : 'Date unknown';
-
+    const pri        = d.contacted ? 'contacted' : d.priority;
     const iconClass  = { high: 'icon-high', medium: 'icon-medium', low: 'icon-low', contacted: 'icon-contacted' }[pri];
     const iconChar   = { high: '!', medium: '~', low: '✓', contacted: '✓' }[pri];
     const badgeClass = { high: 'b-high', medium: 'b-medium', low: 'b-low', contacted: 'b-contacted' }[pri];
-    const badgeText  = { high: 'High', medium: 'Medium', low: 'Low', contacted: 'Contacted' }[pri];
+    const badgeText  = { high: 'High', medium: 'Bronze', low: d.quality_rating || 'Low', contacted: 'Contacted' }[pri];
 
-    return `<div class="daycare-item" id="item-${d.id}" onclick="selectDaycare('${d.id}')">
+    return `<div class="daycare-item" id="item-${d.key}" onclick="selectProgram('${d.key}')">
       <div class="item-icon ${iconClass}">${iconChar}</div>
       <div class="item-info">
-        <div class="item-name">${titleCase(n)}</div>
-        <div class="item-meta">${d.address || ''} &middot; ${yrsTxt}</div>
+        <div class="item-name">${escHtml(d.site_name || 'Unknown')}</div>
+        <div class="item-meta">${escHtml(d.address || '')} &middot; ${d.zip || ''}</div>
       </div>
-      <span class="badge ${badgeClass}">${badgeText}</span>
+      <span class="badge ${badgeClass}">${escHtml(badgeText)}</span>
     </div>`;
   }).join(''));
 }
 
 /* ─────────────────────────────────────────────────────
-   Select / highlight a daycare
+   Select / open popup for a program
 ───────────────────────────────────────────────────── */
-function selectDaycare(id) {
-  const d = allDaycares.find(x => x.id === id);
+function selectProgram(key) {
+  const d = allPrograms.find(x => x.key === key);
   if (!d) return;
 
   document.querySelectorAll('.daycare-item').forEach(el => el.classList.remove('active'));
-  const item = document.getElementById(`item-${id}`);
+  const item = document.getElementById(`item-${key}`);
   if (item) { item.classList.add('active'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 
-  const marker = markers[id];
+  const marker = markers[key];
   if (!marker) return;
   map.panTo(marker.getLatLng(), { animate: true });
-
-  const n    = titleCase(name(d));
-  const yrs  = yearsAgo(d.license_start_date);
-  const yr   = d.license_start_date ? new Date(d.license_start_date).getFullYear() : 'N/A';
-  const exp  = d.expiration_date ? new Date(d.expiration_date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A';
 
   const priBg  = { high: '#fee2e2', medium: '#fef3c7', low: '#dcfce7' }[d.priority] || '#f1f5f9';
   const priFg  = { high: '#991b1b', medium: '#92400e', low: '#166534' }[d.priority] || '#475569';
   const priMsg = {
-    high:   '&#x26A0; High Priority — likely needs new play equipment',
-    medium: '&#128997; Medium Priority — worth a quote',
-    low:    '&#9989; Lower Priority — newer facility',
+    high:   '&#9888; High Priority &mdash; basic license only, likely needs new equipment',
+    medium: '&#128997; Medium Priority &mdash; Bronze rated, potential for upgrade',
+    low:    '&#9989; Lower Priority &mdash; ' + (d.quality_rating || '') + ' rated facility',
   }[d.priority] || '';
 
+  const phone   = d.phone_number ? `<a href="tel:${d.phone_number}" style="color:#064e3b;font-weight:600">${escHtml(d.phone_number)}</a>` : '<span style="color:#94a3b8">N/A</span>';
+  const ages    = d.ages_served   ? escHtml(d.ages_served)  : 'N/A';
+  const program = d.program_information ? escHtml(d.program_information) : '';
+  const website = d.url ? `<a href="${escHtml(d.url)}" target="_blank" rel="noopener" style="color:#064e3b;font-size:0.75rem">Visit website &#8599;</a>` : '';
+
   const btnHtml = d.contacted
-    ? `<button onclick="unmark('${id}')" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;
-         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:4px">
+    ? `<button onclick="unmark('${key}')" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;
+         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:6px">
          &#8617; Unmark contacted</button>`
-    : `<button onclick="mark('${id}')" style="background:#7c3aed;color:#fff;border:none;
-         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:4px">
+    : `<button onclick="mark('${key}')" style="background:#7c3aed;color:#fff;border:none;
+         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:6px">
          &#10003; Mark as contacted</button>`;
 
   marker.bindPopup(`
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:230px;max-width:280px">
-      <div style="font-weight:700;font-size:0.95rem;margin-bottom:3px;color:#1e293b">${n}</div>
-      <div style="font-size:0.77rem;color:#64748b;margin-bottom:10px">${d.address || ''}, Chicago IL ${d.zip_code || ''}</div>
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:240px;max-width:290px">
+      <div style="font-weight:700;font-size:0.95rem;margin-bottom:3px;color:#1e293b">${escHtml(d.site_name || 'Unknown')}</div>
+      <div style="font-size:0.77rem;color:#64748b;margin-bottom:10px">${escHtml(d.address || '')}, Chicago IL ${d.zip || ''}</div>
 
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;margin-bottom:5px">
+        <span style="color:#64748b">Phone</span>
+        ${phone}
+      </div>
       <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:5px">
-        <span style="color:#64748b">Licensed since</span>
-        <span style="font-weight:600">${yr}${yrs !== null ? ` (${yrs} yrs ago)` : ''}</span>
+        <span style="color:#64748b">Ages served</span>
+        <span style="font-weight:600;text-align:right;max-width:160px">${ages}</span>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:10px">
-        <span style="color:#64748b">License expires</span>
-        <span style="font-weight:600">${exp}</span>
+        <span style="color:#64748b">Quality rating</span>
+        <span style="font-weight:600">${escHtml(d.quality_rating || 'Licensed')}</span>
       </div>
 
-      <div style="font-size:0.8rem;padding:7px 9px;border-radius:6px;
-                  background:${priBg};color:${priFg};margin-bottom:8px;font-weight:500">
+      <div style="font-size:0.79rem;padding:7px 9px;border-radius:6px;
+                  background:${priBg};color:${priFg};margin-bottom:6px;font-weight:500">
         ${priMsg}
       </div>
+
+      ${program ? `<div style="font-size:0.72rem;color:#64748b;margin-bottom:6px">${program}</div>` : ''}
+      ${website}
       ${btnHtml}
     </div>
-  `, { maxWidth: 300 }).openPopup();
+  `, { maxWidth: 310 }).openPopup();
 }
 
 /* ─────────────────────────────────────────────────────
    Contact tracking
 ───────────────────────────────────────────────────── */
-function mark(id) {
-  contacted.add(id);
+function mark(key) {
+  contacted.add(key);
   saveContacted();
-  patch(id, { contacted: true });
+  patch(key, { contacted: true });
 }
 
-function unmark(id) {
-  contacted.delete(id);
+function unmark(key) {
+  contacted.delete(key);
   saveContacted();
-  patch(id, { contacted: false });
+  patch(key, { contacted: false });
 }
 
-function patch(id, changes) {
-  const i = allDaycares.findIndex(d => d.id === id);
-  if (i < 0) return;
-  allDaycares[i] = { ...allDaycares[i], ...changes };
-
-  const j = filtered.findIndex(d => d.id === id);
-  if (j >= 0) filtered[j] = { ...filtered[j], ...changes };
-
-  const d = allDaycares[i];
-  const m = markers[id];
+function patch(key, changes) {
+  [allPrograms, filtered].forEach(arr => {
+    const i = arr.findIndex(d => d.key === key);
+    if (i >= 0) arr[i] = { ...arr[i], ...changes };
+  });
+  const d = allPrograms.find(x => x.key === key);
+  if (!d) return;
+  const m = markers[key];
   if (m) m.setIcon(d.contacted ? ICONS.contacted : ICONS[d.priority]);
-
   renderList();
   updateStats();
   map.closePopup();
-  setTimeout(() => selectDaycare(id), 80);
+  setTimeout(() => selectProgram(key), 80);
 }
 
 function saveContacted() {
-  localStorage.setItem('chi_dc_contacted', JSON.stringify([...contacted]));
+  localStorage.setItem('chi_dc_v2_contacted', JSON.stringify([...contacted]));
 }
 
 function clearContacted() {
   if (!confirm('Clear all "contacted" markers?')) return;
   contacted = new Set();
   saveContacted();
-  allDaycares = allDaycares.map(d => ({ ...d, contacted: false }));
-  filtered    = filtered.map(d => ({ ...d, contacted: false }));
+  [allPrograms, filtered] = [allPrograms, filtered].map(arr =>
+    arr.map(d => ({ ...d, contacted: false }))
+  );
   renderMarkers();
   renderList();
   updateStats();
@@ -746,27 +727,28 @@ function clearContacted() {
 ───────────────────────────────────────────────────── */
 function exportCSV() {
   const highOnly = document.getElementById('chkHighOnly')?.checked;
-  let rows = (highOnly ? filtered.filter(d => d.priority === 'high') : filtered);
+  const rows     = (highOnly ? filtered.filter(d => d.priority === 'high') : filtered);
 
   const csv = [
-    '"Name","Address","ZIP","License Start Year","Years Active","Priority","Contacted","Latitude","Longitude"',
+    '"Name","Address","ZIP","Phone","Ages Served","Quality Rating","Priority","Contacted","Latitude","Longitude"',
     ...rows.map(d => [
-      name(d),
-      d.address || '',
-      d.zip_code || '',
-      d.license_start_date ? new Date(d.license_start_date).getFullYear() : '',
-      yearsAgo(d.license_start_date) ?? '',
+      d.site_name        || '',
+      d.address          || '',
+      d.zip              || '',
+      d.phone_number     || '',
+      d.ages_served      || '',
+      d.quality_rating   || 'Licensed',
       d.priority,
       d.contacted ? 'Yes' : 'No',
-      d.latitude || '',
+      d.latitude  || '',
       d.longitude || '',
     ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
   ].join('\r\n');
 
-  const zip   = document.getElementById('zipSelect').value || 'All';
-  const a     = document.createElement('a');
-  a.href      = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download  = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
+  const zip  = document.getElementById('zipSelect').value || 'All';
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -777,7 +759,7 @@ function exportCSV() {
 function updateStats() {
   document.getElementById('statTotal').textContent     = filtered.length;
   document.getElementById('statHigh').textContent      = filtered.filter(d => d.priority === 'high').length;
-  document.getElementById('statContacted').textContent = allDaycares.filter(d => d.contacted).length;
+  document.getElementById('statContacted').textContent = allPrograms.filter(d => d.contacted).length;
 }
 
 /* ─────────────────────────────────────────────────────
@@ -789,12 +771,12 @@ async function apiFetch(url) {
   return res.json();
 }
 
-function name(d) {
-  return d.doing_business_as_name || d.legal_name || 'Unknown';
-}
-
-function titleCase(s) {
-  return s ? s.toLowerCase().replace(/\b([a-z])/g, c => c.toUpperCase()) : '';
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function setList(html) {
@@ -813,8 +795,8 @@ function hideLoading() {
 /* ─────────────────────────────────────────────────────
    Init
 ───────────────────────────────────────────────────── */
-showLoading('Loading Chicago daycare data…');
-loadAllDaycares();
+showLoading('Loading Chicago early learning programs…');
+loadAll();
 </script>
 </body>
 </html>
