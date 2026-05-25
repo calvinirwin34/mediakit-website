@@ -768,6 +768,7 @@ function buildEmailBody(d, s) {
   const dcName  = d.name    ? titleCase(d.name) : 'your facility';
   const city    = d.city    ? titleCase(d.city) : 'your area';
   const address = d.address ? `${d.address}, ${city}` : city;
+  const baseUrl = 'https://calvinirwin34.github.io/mediakit-website/images';
   return `Hi ${dcName} Team!
 
 My name is ${s.name} from ${s.company} — we're a small business that handcrafts made-to-order custom mud kitchens for daycares and preschools right here in the Chicagoland area.
@@ -779,6 +780,13 @@ Here's a taste of what we can customize for you:
   • Upper cabinets
   • Working faucet & draining sink
   • ...and anything else you can dream up — bring your ideas and let's get creative!
+
+Check out some of our work below:
+  ${baseUrl}/mud-kitchen-main.jpg
+  ${baseUrl}/mud-kitchen-1.jpg
+  ${baseUrl}/mud-kitchen-3.jpg
+  ${baseUrl}/mud-kitchen-4.jpg
+  ${baseUrl}/mud-kitchen-best.jpg
 
 Delivery is available to the Chicagoland area for an additional fee.
 
