@@ -33,7 +33,6 @@
     header h1 { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
     header p  { font-size: 0.74rem; opacity: 0.75; margin-top: 2px; }
 
-    /* ── Body ── */
     .app-body { display: flex; flex: 1; overflow: hidden; }
 
     /* ── Sidebar ── */
@@ -49,9 +48,45 @@
       z-index: 5;
     }
 
+    /* Sender strip */
+    .sender-strip {
+      padding: 8px 16px;
+      border-bottom: 1px solid #e2e8f0;
+      background: #f0fdf4;
+    }
+    .sender-strip summary {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #064e3b;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .sender-strip summary::-webkit-details-marker { display: none; }
+    .sender-strip summary::before { content: '▶'; font-size: 0.58rem; transition: transform 0.2s; }
+    .sender-strip[open] summary::before { transform: rotate(90deg); }
+    .sender-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-top: 7px;
+    }
+    .sender-grid input {
+      padding: 6px 8px;
+      border: 1px solid #bbf7d0;
+      border-radius: 5px;
+      font-size: 0.77rem;
+      color: #1e293b;
+      background: #fff;
+    }
+    .sender-grid input:focus { outline: 2px solid #059669; outline-offset: 1px; }
+    .sender-grid input.full { grid-column: 1 / -1; }
+
     /* Controls */
     .controls {
-      padding: 14px 16px 12px;
+      padding: 12px 16px 10px;
       border-bottom: 1px solid #e2e8f0;
       background: #f8fafc;
     }
@@ -70,10 +105,9 @@
       font-size: 0.88rem;
       color: #1e293b;
       background: #fff;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
     }
     .search-input:focus { outline: 2px solid #059669; outline-offset: 1px; }
-
     .controls select {
       width: 100%;
       padding: 8px 10px;
@@ -82,63 +116,56 @@
       font-size: 0.88rem;
       color: #1e293b;
       background: #fff;
-      margin-bottom: 10px;
+      margin-bottom: 9px;
       cursor: pointer;
     }
     .controls select:focus { outline: 2px solid #059669; outline-offset: 1px; }
-
     .notice {
-      font-size: 0.7rem;
+      font-size: 0.69rem;
       color: #64748b;
       background: #f1f5f9;
       border: 1px solid #e2e8f0;
       border-radius: 5px;
       padding: 6px 8px;
-      margin-top: 4px;
       line-height: 1.5;
     }
 
-    /* Stats */
+    /* Stats — 4 cards */
     .stats {
-      padding: 10px 16px;
+      padding: 8px 12px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .stat-card {
       flex: 1;
       text-align: center;
       background: #f8fafc;
-      border-radius: 8px;
-      padding: 7px 4px;
+      border-radius: 7px;
+      padding: 6px 2px;
       border: 1px solid #e2e8f0;
     }
-    .stat-card .num { font-size: 1.35rem; font-weight: 700; line-height: 1; }
-    .stat-card .lbl { font-size: 0.63rem; color: #64748b; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-card .num { font-size: 1.2rem; font-weight: 700; line-height: 1; }
+    .stat-card .lbl { font-size: 0.58rem; color: #64748b; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
     .s-total     .num { color: #064e3b; }
     .s-high      .num { color: #dc2626; }
     .s-contacted .num { color: #7c3aed; }
+    .s-responded .num { color: #b45309; }
 
     /* Legend */
     .legend {
-      padding: 8px 16px;
+      padding: 7px 16px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
       flex-wrap: wrap;
-      gap: 6px 14px;
+      gap: 5px 12px;
     }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.71rem;
-      color: #475569;
-    }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.69rem; color: #475569; }
     .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); }
 
     /* Results header */
     .results-header {
-      padding: 8px 16px;
+      padding: 7px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -147,7 +174,7 @@
     }
     .results-header span { font-size: 0.78rem; font-weight: 600; color: #475569; }
     .results-header select {
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       padding: 3px 6px;
       border: 1px solid #e2e8f0;
       border-radius: 4px;
@@ -158,20 +185,14 @@
 
     /* Filter row */
     .filter-row {
-      padding: 6px 16px;
+      padding: 5px 16px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .filter-row label {
-      font-size: 0.72rem;
-      color: #475569;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .filter-row label { font-size: 0.7rem; color: #475569; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     input[type=checkbox] { accent-color: #064e3b; cursor: pointer; }
 
     /* Daycare list */
@@ -180,7 +201,7 @@
     .daycare-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
     .daycare-item {
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-bottom: 1px solid #f1f5f9;
       cursor: pointer;
       display: flex;
@@ -192,59 +213,42 @@
     .daycare-item.active { background: #ecfdf5; border-left: 3px solid #064e3b; padding-left: 11px; }
 
     .item-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
-      color: #fff;
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; flex-shrink: 0; color: #fff;
     }
     .icon-high      { background: #dc2626; }
     .icon-medium    { background: #d97706; }
     .icon-low       { background: #16a34a; }
     .icon-contacted { background: #7c3aed; }
+    .icon-responded { background: #b45309; }
 
     .item-info { flex: 1; min-width: 0; }
-    .item-name {
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: #1e293b;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .item-meta { font-size: 0.7rem; color: #64748b; margin-top: 2px; }
+    .item-name { font-size: 0.83rem; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta { font-size: 0.69rem; color: #64748b; margin-top: 2px; }
 
-    .badge {
-      font-size: 0.62rem;
-      padding: 2px 7px;
-      border-radius: 10px;
-      font-weight: 600;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .badge { font-size: 0.61rem; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
     .b-high      { background: #fee2e2; color: #991b1b; }
     .b-medium    { background: #fef3c7; color: #92400e; }
     .b-low       { background: #dcfce7; color: #166534; }
     .b-contacted { background: #ede9fe; color: #6d28d9; }
+    .b-responded { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 
-    /* Footer buttons */
+    /* Footer */
     .sidebar-footer {
-      padding: 10px 16px;
+      padding: 8px 12px;
       border-top: 1px solid #e2e8f0;
       background: #f8fafc;
       display: flex;
-      gap: 8px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
     .btn-footer {
       flex: 1;
-      padding: 8px 6px;
+      min-width: 80px;
+      padding: 7px 6px;
       border-radius: 6px;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 600;
       cursor: pointer;
       border: 1px solid #e2e8f0;
@@ -254,192 +258,110 @@
     }
     .btn-footer:hover:not(:disabled) { background: #064e3b; color: #fff; border-color: #064e3b; }
     .btn-footer:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-email-all {
+      flex: 1;
+      min-width: 80px;
+      padding: 7px 6px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: #064e3b;
+      color: #fff;
+      transition: opacity 0.15s;
+    }
+    .btn-email-all:hover:not(:disabled) { opacity: 0.85; }
+    .btn-email-all:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* Empty state */
     .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 200px;
-      color: #94a3b8;
-      font-size: 0.85rem;
-      gap: 10px;
-      text-align: center;
-      padding: 0 24px;
-      line-height: 1.5;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 180px; color: #94a3b8; font-size: 0.84rem; gap: 10px;
+      text-align: center; padding: 0 24px; line-height: 1.5;
     }
 
-    /* Map */
     #map { flex: 1; }
 
-    /* Loading overlay */
-    #loadingOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(255,255,255,0.85);
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      backdrop-filter: blur(2px);
+    /* ── Shared modal base ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.48);
+      display: none; align-items: center; justify-content: center;
+      z-index: 10000; padding: 16px;
     }
-    .spinner {
-      width: 46px;
-      height: 46px;
-      border: 4px solid #e2e8f0;
-      border-top-color: #064e3b;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #loadingText {
-      margin-top: 14px;
-      font-size: 0.88rem;
-      color: #475569;
-      font-weight: 500;
-    }
-
-    /* ── Sender details strip ── */
-    .sender-strip {
-      padding: 10px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      background: #f0fdf4;
-    }
-    .sender-strip summary {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #064e3b;
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .sender-strip summary::-webkit-details-marker { display: none; }
-    .sender-strip summary::before { content: '▶'; font-size: 0.6rem; transition: transform 0.2s; }
-    .sender-strip[open] summary::before { transform: rotate(90deg); }
-    .sender-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .sender-grid input {
-      padding: 6px 8px;
-      border: 1px solid #bbf7d0;
-      border-radius: 5px;
-      font-size: 0.78rem;
-      color: #1e293b;
-      background: #fff;
-    }
-    .sender-grid input:focus { outline: 2px solid #059669; outline-offset: 1px; }
-    .sender-grid input.full { grid-column: 1 / -1; }
-
-    /* ── Email modal ── */
-    #emailModal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 16px;
-    }
-    .email-box {
+    .modal-box {
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-      width: 100%;
-      max-width: 560px;
-      display: flex;
-      flex-direction: column;
-      max-height: 90vh;
-      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+      width: 100%; max-width: 560px;
+      display: flex; flex-direction: column;
+      max-height: 90vh; overflow: hidden;
     }
-    .email-header {
-      padding: 14px 18px 12px;
+    .modal-head {
+      padding: 13px 18px 11px;
       border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #064e3b;
-      color: #fff;
-      border-radius: 12px 12px 0 0;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      background: #064e3b; color: #fff;
+      border-radius: 12px 12px 0 0; flex-shrink: 0;
     }
-    .email-header h2 { font-size: 0.95rem; font-weight: 700; }
-    .email-header p  { font-size: 0.72rem; opacity: 0.75; margin-top: 1px; }
-    .email-close {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #fff;
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .modal-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .modal-head p  { font-size: 0.71rem; opacity: 0.78; margin-top: 1px; }
+    .modal-close {
+      background: rgba(255,255,255,0.18); border: none; color: #fff;
+      border-radius: 6px; width: 28px; height: 28px; font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-left: 10px;
     }
-    .email-close:hover { background: rgba(255,255,255,0.3); }
-    .email-body { padding: 14px 18px; overflow-y: auto; flex: 1; }
+    .modal-close:hover { background: rgba(255,255,255,0.32); }
+    .modal-body { padding: 14px 18px; overflow-y: auto; flex: 1; }
+    .modal-foot {
+      padding: 11px 18px; border-top: 1px solid #e2e8f0;
+      display: flex; gap: 7px; flex-wrap: wrap;
+      background: #f8fafc; border-radius: 0 0 12px 12px; flex-shrink: 0;
+    }
+
+    /* Email fields */
     .email-field { margin-bottom: 10px; }
-    .email-field label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: #475569;
-      display: block;
-      margin-bottom: 3px;
-    }
+    .email-field label { font-size: 0.71rem; font-weight: 600; color: #475569; display: block; margin-bottom: 3px; }
     .email-field input, .email-field textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.84rem;
-      color: #1e293b;
-      font-family: inherit;
-      resize: vertical;
+      width: 100%; padding: 8px 10px;
+      border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.83rem; color: #1e293b; font-family: inherit; resize: vertical;
     }
-    .email-field input:focus, .email-field textarea:focus {
-      outline: 2px solid #059669;
-      outline-offset: 1px;
+    .email-field input:focus, .email-field textarea:focus { outline: 2px solid #059669; outline-offset: 1px; }
+    .email-field input[readonly] { background: #f8fafc; color: #64748b; }
+
+    /* Email action buttons */
+    .btn-em {
+      flex: 1; min-width: 100px; padding: 9px 8px;
+      border-radius: 7px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; border: none; transition: opacity 0.15s;
     }
-    .email-footer {
-      padding: 12px 18px;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      background: #f8fafc;
-      border-radius: 0 0 12px 12px;
-    }
-    .btn-email {
-      flex: 1;
-      min-width: 110px;
-      padding: 9px 10px;
-      border-radius: 7px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.15s;
-    }
-    .btn-email:hover { opacity: 0.88; }
+    .btn-em:hover { opacity: 0.86; }
     .btn-copy   { background: #064e3b; color: #fff; }
     .btn-mailto { background: #1e40af; color: #fff; }
     .btn-gmail  { background: #dc2626; color: #fff; }
-    .copy-ok {
-      font-size: 0.72rem;
-      color: #16a34a;
-      font-weight: 600;
-      align-self: center;
-      display: none;
+    .btn-skip   { background: #e2e8f0; color: #475569; }
+    .copy-ok { font-size: 0.71rem; color: #16a34a; font-weight: 600; align-self: center; display: none; }
+
+    /* Send-all progress bar */
+    .sq-progress-wrap { height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; margin-top: 6px; width: 200px; }
+    .sq-progress-fill { height: 100%; background: #fff; border-radius: 3px; transition: width 0.3s; }
+
+    /* Loading overlay */
+    #loadingOverlay {
+      position: fixed; inset: 0; background: rgba(255,255,255,0.85);
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; backdrop-filter: blur(2px);
     }
+    .spinner {
+      width: 46px; height: 46px;
+      border: 4px solid #e2e8f0; border-top-color: #064e3b;
+      border-radius: 50%; animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loadingText { margin-top: 14px; font-size: 0.88rem; color: #475569; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -448,7 +370,7 @@
   <span class="logo">&#x1F6DD;</span>
   <div>
     <h1>Chicago Daycare Play Equipment Lead Finder</h1>
-    <p>Identify Chicago early learning programs in need of new outdoor play equipment</p>
+    <p>Identify early learning programs in need of new outdoor play equipment</p>
   </div>
 </header>
 
@@ -457,26 +379,22 @@
   <!-- ── Sidebar ── -->
   <div class="sidebar">
 
-    <!-- Sender details (saved to localStorage) -->
+    <!-- Your details -->
     <details class="sender-strip" id="senderDetails">
       <summary>&#9993; Your details for email templates</summary>
       <div class="sender-grid">
-        <input id="senderName"    class="full" type="text" placeholder="Your full name"    oninput="saveSender()" />
-        <input id="senderCompany" class="full" type="text" placeholder="Company name"     oninput="saveSender()" />
+        <input id="senderName"    class="full" type="text"  placeholder="Your full name"  oninput="saveSender()" />
+        <input id="senderCompany" class="full" type="text"  placeholder="Company name"    oninput="saveSender()" />
         <input id="senderPhone"   type="text"  placeholder="Your phone"                   oninput="saveSender()" />
         <input id="senderEmail"   type="email" placeholder="Your email"                   oninput="saveSender()" />
       </div>
     </details>
 
+    <!-- Filters -->
     <div class="controls">
       <label for="searchInput">Search by name or address</label>
-      <input
-        type="text"
-        id="searchInput"
-        class="search-input"
-        placeholder="e.g. Little Stars, 3800 N Austin…"
-        oninput="applyFilters()"
-      />
+      <input type="text" id="searchInput" class="search-input"
+             placeholder="e.g. Little Stars, 3800 N Austin…" oninput="applyFilters()" />
 
       <label for="zipSelect">Filter by ZIP code</label>
       <select id="zipSelect" onchange="applyFilters()">
@@ -484,14 +402,15 @@
       </select>
 
       <p class="notice">
-        &#x1F534; <strong>High Priority</strong> &mdash; basic license only (equipment likely needs upgrade)<br>
-        &#x1F7E0; <strong>Medium Priority</strong> &mdash; Bronze quality rating<br>
-        &#x1F7E2; <strong>Lower Priority</strong> &mdash; Silver or Gold rated (already investing)<br>
-        Source: City of Chicago Early Learning Programs. Click any marker for phone &amp; details.
+        &#x1F534; <strong>High</strong> &mdash; basic license (likely needs upgrade) &nbsp;
+        &#x1F7E0; <strong>Medium</strong> &mdash; Bronze rated &nbsp;
+        &#x1F7E2; <strong>Low</strong> &mdash; Silver/Gold &nbsp;
+        &#x1F7E3; <strong>Contacted</strong> &nbsp;
+        &#11088; <strong>Responded</strong>
       </p>
     </div>
 
-    <!-- Stats -->
+    <!-- Stats (4 cards) -->
     <div class="stats" id="statsBar" style="display:none">
       <div class="stat-card s-total">
         <div class="num" id="statTotal">0</div>
@@ -499,20 +418,25 @@
       </div>
       <div class="stat-card s-high">
         <div class="num" id="statHigh">0</div>
-        <div class="lbl">High Priority</div>
+        <div class="lbl">High Pri.</div>
       </div>
       <div class="stat-card s-contacted">
         <div class="num" id="statContacted">0</div>
         <div class="lbl">Contacted</div>
       </div>
+      <div class="stat-card s-responded">
+        <div class="num" id="statResponded">0</div>
+        <div class="lbl">Responded</div>
+      </div>
     </div>
 
     <!-- Legend -->
     <div class="legend" id="legendBar" style="display:none">
-      <div class="legend-item"><div class="dot" style="background:#dc2626"></div> High Priority</div>
-      <div class="legend-item"><div class="dot" style="background:#d97706"></div> Medium (Bronze)</div>
-      <div class="legend-item"><div class="dot" style="background:#16a34a"></div> Lower (Silver/Gold)</div>
+      <div class="legend-item"><div class="dot" style="background:#dc2626"></div> High</div>
+      <div class="legend-item"><div class="dot" style="background:#d97706"></div> Medium</div>
+      <div class="legend-item"><div class="dot" style="background:#16a34a"></div> Low</div>
       <div class="legend-item"><div class="dot" style="background:#7c3aed"></div> Contacted</div>
+      <div class="legend-item"><div class="dot" style="background:#b45309"></div> Responded</div>
     </div>
 
     <!-- Results header -->
@@ -527,20 +451,15 @@
 
     <!-- Filter row -->
     <div class="filter-row" id="filterRow" style="display:none">
-      <label>
-        <input type="checkbox" id="chkHighOnly" onchange="renderList()" />
-        High priority only
-      </label>
-      <label>
-        <input type="checkbox" id="chkHideContacted" onchange="renderList()" />
-        Hide contacted
-      </label>
+      <label><input type="checkbox" id="chkHighOnly"       onchange="renderList()" /> High only</label>
+      <label><input type="checkbox" id="chkHideContacted"  onchange="renderList()" /> Hide contacted</label>
+      <label><input type="checkbox" id="chkRespondedOnly"  onchange="renderList()" /> Responded only</label>
     </div>
 
     <!-- List -->
     <div class="daycare-list" id="daycareList">
       <div class="empty-state">
-        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.4">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.4">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
         Loading Chicago early learning data&hellip;
@@ -549,28 +468,29 @@
 
     <!-- Footer -->
     <div class="sidebar-footer">
-      <button class="btn-footer" id="exportBtn" onclick="exportCSV()" disabled>&#11015; Export CSV</button>
-      <button class="btn-footer" id="clearBtn" onclick="clearContacted()" disabled>Clear Contacts</button>
+      <button class="btn-email-all" id="emailAllBtn" onclick="openSendAll()" disabled>
+        &#9993; Email All Leads
+      </button>
+      <button class="btn-footer" id="exportBtn" onclick="exportCSV()" disabled>&#11015; CSV</button>
+      <button class="btn-footer" id="clearBtn"  onclick="clearAll()"   disabled>&#x21BA; Reset</button>
     </div>
 
   </div><!-- /sidebar -->
 
-  <!-- ── Map ── -->
   <div id="map"></div>
+</div>
 
-</div><!-- /app-body -->
-
-<!-- Email modal -->
-<div id="emailModal" onclick="if(event.target===this)closeEmail()">
-  <div class="email-box">
-    <div class="email-header">
+<!-- ── Single email modal ── -->
+<div class="modal-overlay" id="emailModal" onclick="if(event.target===this)closeEmail()">
+  <div class="modal-box">
+    <div class="modal-head">
       <div>
         <h2>&#9993; Draft Email</h2>
-        <p id="emailModalSubtitle">to daycare</p>
+        <p id="emailSubtitle">to daycare</p>
       </div>
-      <button class="email-close" onclick="closeEmail()">&#x2715;</button>
+      <button class="modal-close" onclick="closeEmail()">&#x2715;</button>
     </div>
-    <div class="email-body">
+    <div class="modal-body">
       <div class="email-field">
         <label>Subject</label>
         <input type="text" id="emailSubject" />
@@ -580,11 +500,48 @@
         <textarea id="emailBody" rows="14"></textarea>
       </div>
     </div>
-    <div class="email-footer">
-      <button class="btn-email btn-copy"   onclick="copyEmail()">&#128203; Copy to Clipboard</button>
-      <button class="btn-email btn-mailto" onclick="openMailApp()">&#128236; Open in Mail App</button>
-      <button class="btn-email btn-gmail"  onclick="openGmail()">&#9993; Open in Gmail</button>
-      <span class="copy-ok" id="copyOk">&#10003; Copied!</span>
+    <div class="modal-foot">
+      <button class="btn-em btn-copy"   onclick="copyEmail('emailSubject','emailBody','copyOk1')">&#128203; Copy</button>
+      <button class="btn-em btn-mailto" onclick="openMailApp('emailSubject','emailBody')">&#128236; Mail App</button>
+      <button class="btn-em btn-gmail"  onclick="openGmail('emailSubject','emailBody')">&#9993; Gmail</button>
+      <span class="copy-ok" id="copyOk1">&#10003; Copied!</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Send-all queue modal ── -->
+<div class="modal-overlay" id="sendAllModal" onclick="if(event.target===this)closeSendAll()">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div style="flex:1">
+        <h2>&#9993; Email Campaign</h2>
+        <p id="sqProgressLabel">Loading&hellip;</p>
+        <div class="sq-progress-wrap">
+          <div class="sq-progress-fill" id="sqProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeSendAll()">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="email-field">
+        <label>Sending to</label>
+        <input type="text" id="sqTo" readonly />
+      </div>
+      <div class="email-field">
+        <label>Subject</label>
+        <input type="text" id="sqSubject" />
+      </div>
+      <div class="email-field">
+        <label>Body</label>
+        <textarea id="sqBody" rows="13"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-em btn-skip"   onclick="sqSkip()">Skip &rarr;</button>
+      <button class="btn-em btn-copy"   onclick="copyEmail('sqSubject','sqBody','sqCopyOk')">&#128203; Copy &amp; Next</button>
+      <button class="btn-em btn-mailto" onclick="sqSend('mailto')">&#128236; Mail App &amp; Next</button>
+      <button class="btn-em btn-gmail"  onclick="sqSend('gmail')">&#9993; Gmail &amp; Next</button>
+      <span class="copy-ok" id="sqCopyOk">&#10003; Copied!</span>
     </div>
   </div>
 </div>
@@ -592,7 +549,7 @@
 <!-- Loading overlay -->
 <div id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingText">Loading Chicago early learning data&hellip;</div>
+  <div id="loadingText">Loading Chicago early learning programs&hellip;</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -609,189 +566,170 @@ const CHI_CENTER = [41.8781, -87.6298];
 let allPrograms = [];
 let filtered    = [];
 let markers     = {};
-let contacted   = new Set(JSON.parse(localStorage.getItem('chi_dc_v2_contacted') || '[]'));
+let contacted   = new Set(JSON.parse(localStorage.getItem('chi_dc_contacted')  || '[]'));
+let responded   = new Set(JSON.parse(localStorage.getItem('chi_dc_responded')  || '[]'));
+
+// Send-all queue
+let sendQueue = [];
+let sqIndex   = 0;
 
 /* ─────────────────────────────────────────────────────
-   Map setup
+   Map
 ───────────────────────────────────────────────────── */
 const map = L.map('map').setView(CHI_CENTER, 11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
   maxZoom: 19,
 }).addTo(map);
-
 const markerLayer = L.layerGroup().addTo(map);
 
 /* ─────────────────────────────────────────────────────
    Icons
 ───────────────────────────────────────────────────── */
-const makeIcon = (color, size) => L.divIcon({
+const mkIcon = (color, size) => L.divIcon({
   className: '',
   html: `<div style="width:${size}px;height:${size}px;border-radius:50%;
            background:${color};border:2px solid #fff;
            box-shadow:0 1px 5px rgba(0,0,0,0.5)"></div>`,
-  iconSize:   [size, size],
-  iconAnchor: [size / 2, size / 2],
+  iconSize: [size, size], iconAnchor: [size/2, size/2],
 });
-
 const ICONS = {
-  high:      makeIcon('#dc2626', 16),
-  medium:    makeIcon('#d97706', 13),
-  low:       makeIcon('#16a34a', 11),
-  contacted: makeIcon('#7c3aed', 13),
+  high:      mkIcon('#dc2626', 16),
+  medium:    mkIcon('#d97706', 13),
+  low:       mkIcon('#16a34a', 11),
+  contacted: mkIcon('#7c3aed', 13),
+  responded: mkIcon('#b45309', 15),
 };
 
 /* ─────────────────────────────────────────────────────
-   Priority based on quality_rating:
-   Licensed / Coming Soon  → high
-   Bronze                  → medium
-   Silver / Gold           → low
+   Priority
 ───────────────────────────────────────────────────── */
 function getPriority(rating) {
   const r = (rating || '').toLowerCase();
-  if (r === 'bronze')               return 'medium';
+  if (r === 'bronze')                return 'medium';
   if (r === 'silver' || r === 'gold') return 'low';
   return 'high';
 }
 
+function getStatus(d) {
+  if (d.responded) return 'responded';
+  if (d.contacted) return 'contacted';
+  return d.priority;
+}
+
 /* ─────────────────────────────────────────────────────
-   Load all programs on startup
+   Load all programs
 ───────────────────────────────────────────────────── */
 async function loadAll() {
   showLoading('Loading Chicago early learning programs…');
   try {
-    const url = API_URL + '?$limit=1000&$where=latitude IS NOT NULL';
-    const raw = await apiFetch(url);
-
-    allPrograms = raw
-      .filter(d => d.latitude && d.longitude)
-      .map(d => ({
-        ...d,
-        priority:  getPriority(d.quality_rating),
-        contacted: contacted.has(d.key),
-      }));
-
+    const raw = await apiFetch(API_URL + '?$limit=1000&$where=latitude IS NOT NULL');
+    allPrograms = raw.filter(d => d.latitude && d.longitude).map(d => ({
+      ...d,
+      priority:  getPriority(d.quality_rating),
+      contacted: contacted.has(d.key),
+      responded: responded.has(d.key),
+    }));
     populateZipFilter();
     applyFilters();
     updateStats();
-
-    ['statsBar', 'legendBar', 'resultsHeader', 'filterRow'].forEach(id => {
-      document.getElementById(id).style.display = 'flex';
-    });
-    document.getElementById('exportBtn').disabled = false;
-    document.getElementById('clearBtn').disabled  = false;
-
-  } catch (e) {
+    ['statsBar','legendBar','resultsHeader','filterRow'].forEach(id =>
+      document.getElementById(id).style.display = 'flex');
+    document.getElementById('exportBtn').disabled  = false;
+    document.getElementById('clearBtn').disabled   = false;
+    document.getElementById('emailAllBtn').disabled = false;
+  } catch(e) {
     console.error(e);
-    setList(`<div class="empty-state">
-      Failed to load data. Check your internet connection and try refreshing.
-    </div>`);
+    setList('<div class="empty-state">Failed to load data. Check your connection and refresh.</div>');
   } finally {
     hideLoading();
   }
 }
 
 /* ─────────────────────────────────────────────────────
-   Populate ZIP dropdown from loaded data
+   ZIP filter
 ───────────────────────────────────────────────────── */
 function populateZipFilter() {
-  const zips = [...new Set(allPrograms.map(d => (d.zip || '').trim()).filter(Boolean))].sort();
+  const zips = [...new Set(allPrograms.map(d => (d.zip||'').trim()).filter(Boolean))].sort();
   const sel  = document.getElementById('zipSelect');
   sel.innerHTML = '<option value="">All ZIP codes</option>';
-  zips.forEach(z => {
-    const opt = document.createElement('option');
-    opt.value = opt.textContent = z;
-    sel.appendChild(opt);
-  });
+  zips.forEach(z => { const o = document.createElement('option'); o.value = o.textContent = z; sel.appendChild(o); });
 }
 
 /* ─────────────────────────────────────────────────────
-   Apply search + ZIP filters
+   Filters
 ───────────────────────────────────────────────────── */
 function applyFilters() {
-  const query = document.getElementById('searchInput').value.trim().toLowerCase();
-  const zip   = document.getElementById('zipSelect').value.trim();
-
-  filtered = allPrograms.filter(d => {
-    const name = (d.site_name || '').toLowerCase();
-    const addr = (d.address   || '').toLowerCase();
-    const matchSearch = !query || name.includes(query) || addr.includes(query);
-    const matchZip    = !zip   || (d.zip || '').trim() === zip;
-    return matchSearch && matchZip;
+  const q   = document.getElementById('searchInput').value.trim().toLowerCase();
+  const zip = document.getElementById('zipSelect').value.trim();
+  filtered  = allPrograms.filter(d => {
+    const n = (d.site_name||'').toLowerCase(), a = (d.address||'').toLowerCase();
+    return (!q || n.includes(q) || a.includes(q)) && (!zip || (d.zip||'').trim() === zip);
   });
-
   renderMarkers();
   renderList();
   updateStats();
 }
 
 /* ─────────────────────────────────────────────────────
-   Render map markers
+   Render markers
 ───────────────────────────────────────────────────── */
 function renderMarkers() {
   markerLayer.clearLayers();
   markers = {};
-
-  // Render low → high so high-priority dots appear on top
-  const sorted = [...filtered].sort((a, b) => {
-    const o = { low: 0, medium: 1, high: 2 };
-    return o[a.priority] - o[b.priority];
-  });
-
-  for (const d of sorted) {
-    const icon = d.contacted ? ICONS.contacted : ICONS[d.priority];
-    const m    = L.marker([+d.latitude, +d.longitude], { icon });
+  const order = { low:0, medium:1, high:2, contacted:3, responded:4 };
+  [...filtered].sort((a,b) => order[getStatus(a)] - order[getStatus(b)]).forEach(d => {
+    const m = L.marker([+d.latitude, +d.longitude], { icon: ICONS[getStatus(d)] });
     m.on('click', () => selectProgram(d.key));
     m.addTo(markerLayer);
     markers[d.key] = m;
-  }
+  });
 }
 
 /* ─────────────────────────────────────────────────────
-   Render sidebar list
+   Render list
 ───────────────────────────────────────────────────── */
 function renderList() {
   const sort          = document.getElementById('sortSelect')?.value || 'priority';
   const highOnly      = document.getElementById('chkHighOnly')?.checked;
   const hideContacted = document.getElementById('chkHideContacted')?.checked;
+  const respondedOnly = document.getElementById('chkRespondedOnly')?.checked;
 
   let list = [...filtered];
-  if (highOnly)      list = list.filter(d => d.priority === 'high');
-  if (hideContacted) list = list.filter(d => !d.contacted);
+  if (highOnly)      list = list.filter(d => d.priority === 'high' && !d.contacted && !d.responded);
+  if (hideContacted) list = list.filter(d => !d.contacted && !d.responded);
+  if (respondedOnly) list = list.filter(d => d.responded);
 
-  const priOrder = { high: 0, medium: 1, low: 2 };
-  if (sort === 'priority') list.sort((a, b) => priOrder[a.priority] - priOrder[b.priority]);
-  if (sort === 'name')     list.sort((a, b) => (a.site_name || '').localeCompare(b.site_name || ''));
-  if (sort === 'zip')      list.sort((a, b) => (a.zip || '').localeCompare(b.zip || ''));
+  const priOrder = { high:0, medium:1, low:2, contacted:3, responded:4 };
+  if (sort === 'priority') list.sort((a,b) => priOrder[getStatus(a)] - priOrder[getStatus(b)]);
+  if (sort === 'name')     list.sort((a,b) => (a.site_name||'').localeCompare(b.site_name||''));
+  if (sort === 'zip')      list.sort((a,b) => (a.zip||'').localeCompare(b.zip||''));
 
-  document.getElementById('resultsCount').textContent =
-    `${list.length} result${list.length !== 1 ? 's' : ''}`;
+  document.getElementById('resultsCount').textContent = `${list.length} result${list.length!==1?'s':''}`;
 
-  if (!list.length) {
-    setList('<div class="empty-state">No programs match the current filters.</div>');
-    return;
-  }
+  if (!list.length) { setList('<div class="empty-state">No programs match the current filters.</div>'); return; }
+
+  const STATUS_ICON  = { high:'icon-high', medium:'icon-medium', low:'icon-low', contacted:'icon-contacted', responded:'icon-responded' };
+  const STATUS_CHAR  = { high:'!', medium:'~', low:'✓', contacted:'✓', responded:'★' };
+  const STATUS_BADGE = { high:'b-high', medium:'b-medium', low:'b-low', contacted:'b-contacted', responded:'b-responded' };
+  const STATUS_TEXT  = { high:'High', medium:'Bronze', low:null, contacted:'Contacted', responded:'Responded ★' };
 
   setList(list.map(d => {
-    const pri        = d.contacted ? 'contacted' : d.priority;
-    const iconClass  = { high: 'icon-high', medium: 'icon-medium', low: 'icon-low', contacted: 'icon-contacted' }[pri];
-    const iconChar   = { high: '!', medium: '~', low: '✓', contacted: '✓' }[pri];
-    const badgeClass = { high: 'b-high', medium: 'b-medium', low: 'b-low', contacted: 'b-contacted' }[pri];
-    const badgeText  = { high: 'High', medium: 'Bronze', low: d.quality_rating || 'Low', contacted: 'Contacted' }[pri];
-
+    const s    = getStatus(d);
+    const txt  = STATUS_TEXT[s] ?? (d.quality_rating || 'Low');
     return `<div class="daycare-item" id="item-${d.key}" onclick="selectProgram('${d.key}')">
-      <div class="item-icon ${iconClass}">${iconChar}</div>
+      <div class="item-icon ${STATUS_ICON[s]}">${STATUS_CHAR[s]}</div>
       <div class="item-info">
-        <div class="item-name">${escHtml(d.site_name || 'Unknown')}</div>
-        <div class="item-meta">${escHtml(d.address || '')} &middot; ${d.zip || ''}</div>
+        <div class="item-name">${esc(d.site_name||'Unknown')}</div>
+        <div class="item-meta">${esc(d.address||'')} &middot; ${d.zip||''}</div>
       </div>
-      <span class="badge ${badgeClass}">${escHtml(badgeText)}</span>
+      <span class="badge ${STATUS_BADGE[s]}">${esc(txt)}</span>
     </div>`;
   }).join(''));
 }
 
 /* ─────────────────────────────────────────────────────
-   Select / open popup for a program
+   Select / popup
 ───────────────────────────────────────────────────── */
 function selectProgram(key) {
   const d = allPrograms.find(x => x.key === key);
@@ -799,79 +737,85 @@ function selectProgram(key) {
 
   document.querySelectorAll('.daycare-item').forEach(el => el.classList.remove('active'));
   const item = document.getElementById(`item-${key}`);
-  if (item) { item.classList.add('active'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  if (item) { item.classList.add('active'); item.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
 
-  const marker = markers[key];
-  if (!marker) return;
-  map.panTo(marker.getLatLng(), { animate: true });
+  const mk = markers[key];
+  if (!mk) return;
+  map.panTo(mk.getLatLng(), { animate:true });
 
-  const priBg  = { high: '#fee2e2', medium: '#fef3c7', low: '#dcfce7' }[d.priority] || '#f1f5f9';
-  const priFg  = { high: '#991b1b', medium: '#92400e', low: '#166534' }[d.priority] || '#475569';
+  const priBg  = { high:'#fee2e2', medium:'#fef3c7', low:'#dcfce7' }[d.priority] || '#f1f5f9';
+  const priFg  = { high:'#991b1b', medium:'#92400e', low:'#166534' }[d.priority] || '#475569';
   const priMsg = {
-    high:   '&#9888; High Priority &mdash; basic license only, likely needs new equipment',
-    medium: '&#128997; Medium Priority &mdash; Bronze rated, potential for upgrade',
-    low:    '&#9989; Lower Priority &mdash; ' + (d.quality_rating || '') + ' rated facility',
+    high:   '&#9888; High Priority &mdash; basic license, likely needs new equipment',
+    medium: '&#128997; Medium Priority &mdash; Bronze rated',
+    low:    '&#9989; Lower Priority &mdash; ' + (d.quality_rating||'') + ' rated',
   }[d.priority] || '';
 
-  const phone   = d.phone_number ? `<a href="tel:${d.phone_number}" style="color:#064e3b;font-weight:600">${escHtml(d.phone_number)}</a>` : '<span style="color:#94a3b8">N/A</span>';
-  const ages    = d.ages_served   ? escHtml(d.ages_served)  : 'N/A';
-  const program = d.program_information ? escHtml(d.program_information) : '';
-  const website = d.url ? `<a href="${escHtml(d.url)}" target="_blank" rel="noopener" style="color:#064e3b;font-size:0.75rem">Visit website &#8599;</a>` : '';
+  const phone   = d.phone_number ? `<a href="tel:${d.phone_number}" style="color:#064e3b;font-weight:600">${esc(d.phone_number)}</a>` : '<span style="color:#94a3b8">N/A</span>';
+  const ages    = d.ages_served ? esc(d.ages_served) : 'N/A';
+  const program = d.program_information ? `<div style="font-size:0.71rem;color:#64748b;margin-bottom:6px">${esc(d.program_information)}</div>` : '';
+  const website = d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener" style="color:#064e3b;font-size:0.74rem;display:block;margin-bottom:6px">Visit website &#8599;</a>` : '';
 
-  const btnHtml = d.contacted
-    ? `<button onclick="unmark('${key}')" style="background:#f3f4f6;color:#374151;border:1px solid #e2e8f0;
-         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:6px">
-         &#8617; Unmark contacted</button>`
-    : `<button onclick="mark('${key}')" style="background:#7c3aed;color:#fff;border:none;
-         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:6px">
-         &#10003; Mark as contacted</button>`;
+  let actionBtn = '';
+  if (d.responded) {
+    actionBtn = btn('&#9733; Responded', `unmarkResponded('${key}')`, '#78350f', '#fef3c7', '1px solid #fcd34d');
+  } else if (d.contacted) {
+    actionBtn =
+      btn('&#9733; Mark as Responded', `markResponded('${key}')`, '#fff', '#b45309') +
+      btn('&#8617; Unmark Contacted',  `unmark('${key}')`,        '#374151', '#f3f4f6', '1px solid #e2e8f0');
+  } else {
+    actionBtn = btn('&#10003; Mark as Contacted', `mark('${key}')`, '#fff', '#7c3aed');
+  }
 
-  marker.bindPopup(`
+  mk.bindPopup(`
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:240px;max-width:290px">
-      <div style="font-weight:700;font-size:0.95rem;margin-bottom:3px;color:#1e293b">${escHtml(d.site_name || 'Unknown')}</div>
-      <div style="font-size:0.77rem;color:#64748b;margin-bottom:10px">${escHtml(d.address || '')}, Chicago IL ${d.zip || ''}</div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;margin-bottom:5px">
-        <span style="color:#64748b">Phone</span>
-        ${phone}
+      <div style="font-weight:700;font-size:0.94rem;margin-bottom:3px;color:#1e293b">${esc(d.site_name||'Unknown')}</div>
+      <div style="font-size:0.76rem;color:#64748b;margin-bottom:9px">${esc(d.address||'')}, Chicago IL ${d.zip||''}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.79rem;margin-bottom:4px">
+        <span style="color:#64748b">Phone</span>${phone}
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:5px">
-        <span style="color:#64748b">Ages served</span>
+      <div style="display:flex;justify-content:space-between;font-size:0.79rem;margin-bottom:4px">
+        <span style="color:#64748b">Ages</span>
         <span style="font-weight:600;text-align:right;max-width:160px">${ages}</span>
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:10px">
-        <span style="color:#64748b">Quality rating</span>
-        <span style="font-weight:600">${escHtml(d.quality_rating || 'Licensed')}</span>
+      <div style="display:flex;justify-content:space-between;font-size:0.79rem;margin-bottom:9px">
+        <span style="color:#64748b">Rating</span>
+        <span style="font-weight:600">${esc(d.quality_rating||'Licensed')}</span>
       </div>
-
-      <div style="font-size:0.79rem;padding:7px 9px;border-radius:6px;
-                  background:${priBg};color:${priFg};margin-bottom:6px;font-weight:500">
-        ${priMsg}
-      </div>
-
-      ${program ? `<div style="font-size:0.72rem;color:#64748b;margin-bottom:6px">${program}</div>` : ''}
-      ${website}
+      <div style="font-size:0.78rem;padding:6px 9px;border-radius:6px;background:${priBg};color:${priFg};margin-bottom:7px;font-weight:500">${priMsg}</div>
+      ${program}${website}
       <button onclick="openEmail('${key}')" style="background:#064e3b;color:#fff;border:none;
-         padding:8px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;width:100%;font-weight:600;margin-top:6px">
-         &#9993; Draft Email to This Daycare</button>
-      ${btnHtml}
+        padding:7px 10px;border-radius:6px;cursor:pointer;font-size:0.78rem;width:100%;font-weight:600;margin-bottom:5px">
+        &#9993; Draft Email</button>
+      ${actionBtn}
     </div>
-  `, { maxWidth: 310 }).openPopup();
+  `, { maxWidth:310 }).openPopup();
+}
+
+function btn(label, onclick, color, bg, border='none') {
+  return `<button onclick="${onclick}" style="background:${bg};color:${color};border:${border};
+    padding:7px 10px;border-radius:6px;cursor:pointer;font-size:0.78rem;width:100%;font-weight:600;margin-top:4px">${label}</button>`;
 }
 
 /* ─────────────────────────────────────────────────────
-   Contact tracking
+   Contact & Response tracking
 ───────────────────────────────────────────────────── */
 function mark(key) {
-  contacted.add(key);
-  saveContacted();
-  patch(key, { contacted: true });
+  contacted.add(key); saveContacted();
+  patch(key, { contacted:true, responded:false });
 }
-
 function unmark(key) {
-  contacted.delete(key);
-  saveContacted();
-  patch(key, { contacted: false });
+  contacted.delete(key); saveContacted();
+  patch(key, { contacted:false });
+}
+function markResponded(key) {
+  responded.add(key); saveResponded();
+  contacted.add(key); saveContacted();
+  patch(key, { contacted:true, responded:true });
+}
+function unmarkResponded(key) {
+  responded.delete(key); saveResponded();
+  patch(key, { responded:false });
 }
 
 function patch(key, changes) {
@@ -882,58 +826,23 @@ function patch(key, changes) {
   const d = allPrograms.find(x => x.key === key);
   if (!d) return;
   const m = markers[key];
-  if (m) m.setIcon(d.contacted ? ICONS.contacted : ICONS[d.priority]);
+  if (m) m.setIcon(ICONS[getStatus(d)]);
   renderList();
   updateStats();
   map.closePopup();
   setTimeout(() => selectProgram(key), 80);
 }
 
-function saveContacted() {
-  localStorage.setItem('chi_dc_v2_contacted', JSON.stringify([...contacted]));
-}
+function saveContacted() { localStorage.setItem('chi_dc_contacted', JSON.stringify([...contacted])); }
+function saveResponded()  { localStorage.setItem('chi_dc_responded', JSON.stringify([...responded])); }
 
-function clearContacted() {
-  if (!confirm('Clear all "contacted" markers?')) return;
-  contacted = new Set();
-  saveContacted();
+function clearAll() {
+  if (!confirm('Reset all contacted and responded markers?')) return;
+  contacted = new Set(); responded = new Set();
+  saveContacted(); saveResponded();
   [allPrograms, filtered] = [allPrograms, filtered].map(arr =>
-    arr.map(d => ({ ...d, contacted: false }))
-  );
-  renderMarkers();
-  renderList();
-  updateStats();
-}
-
-/* ─────────────────────────────────────────────────────
-   Export CSV
-───────────────────────────────────────────────────── */
-function exportCSV() {
-  const highOnly = document.getElementById('chkHighOnly')?.checked;
-  const rows     = (highOnly ? filtered.filter(d => d.priority === 'high') : filtered);
-
-  const csv = [
-    '"Name","Address","ZIP","Phone","Ages Served","Quality Rating","Priority","Contacted","Latitude","Longitude"',
-    ...rows.map(d => [
-      d.site_name        || '',
-      d.address          || '',
-      d.zip              || '',
-      d.phone_number     || '',
-      d.ages_served      || '',
-      d.quality_rating   || 'Licensed',
-      d.priority,
-      d.contacted ? 'Yes' : 'No',
-      d.latitude  || '',
-      d.longitude || '',
-    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
-  ].join('\r\n');
-
-  const zip  = document.getElementById('zipSelect').value || 'All';
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-  a.download = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+    arr.map(d => ({ ...d, contacted:false, responded:false })));
+  renderMarkers(); renderList(); updateStats();
 }
 
 /* ─────────────────────────────────────────────────────
@@ -941,38 +850,187 @@ function exportCSV() {
 ───────────────────────────────────────────────────── */
 function updateStats() {
   document.getElementById('statTotal').textContent     = filtered.length;
-  document.getElementById('statHigh').textContent      = filtered.filter(d => d.priority === 'high').length;
-  document.getElementById('statContacted').textContent = allPrograms.filter(d => d.contacted).length;
+  document.getElementById('statHigh').textContent      = filtered.filter(d => d.priority==='high' && !d.contacted && !d.responded).length;
+  document.getElementById('statContacted').textContent = allPrograms.filter(d => d.contacted && !d.responded).length;
+  document.getElementById('statResponded').textContent = allPrograms.filter(d => d.responded).length;
 }
 
 /* ─────────────────────────────────────────────────────
-   Helpers
+   Email helpers
 ───────────────────────────────────────────────────── */
-async function apiFetch(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
-  return res.json();
+function getSender() {
+  return {
+    name:    document.getElementById('senderName').value.trim()    || '[Your Name]',
+    company: document.getElementById('senderCompany').value.trim() || '[Your Company]',
+    phone:   document.getElementById('senderPhone').value.trim()   || '[Your Phone]',
+    email:   document.getElementById('senderEmail').value.trim()   || '[Your Email]',
+  };
 }
 
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function buildEmailBody(d, s) {
+  const dcName  = d.site_name || 'your facility';
+  const address = d.address   ? `${d.address}, Chicago IL ${d.zip||''}` : 'Chicago, IL';
+  const ages    = d.ages_served || 'young children';
+  return `Dear ${dcName} Team,
+
+I hope this message finds you well. My name is ${s.name}, and I represent ${s.company}, a provider of high-quality outdoor play equipment for early childhood learning environments.
+
+We work with daycare centers and early learning programs across the Chicago area to design and install safe, durable, and engaging play spaces that children love — and that meet all ASTM and CPSC safety standards.
+
+I noticed that ${dcName} serves ${ages} at ${address}, and I'd love to discuss how we could enhance your outdoor play area. Whether you're replacing aging equipment, expanding your space, or starting fresh, we offer a free site visit and no-obligation quote.
+
+What we provide:
+  • Custom layouts designed for your available space
+  • Installation by our certified team
+  • Warranty and ongoing maintenance support
+  • Flexible financing options
+
+I'd love to schedule a brief call or site visit at your convenience. Please reach me at ${s.phone} or reply to this email at ${s.email}.
+
+Thank you for the wonderful work you do for Chicago's children. I look forward to connecting.
+
+Warm regards,
+${s.name}
+${s.company}
+${s.phone}
+${s.email}`;
 }
 
-function setList(html) {
-  document.getElementById('daycareList').innerHTML = html;
+function copyEmail(subjectId, bodyId, okId) {
+  const subject = document.getElementById(subjectId).value;
+  const body    = document.getElementById(bodyId).value;
+  navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`).then(() => {
+    const ok = document.getElementById(okId);
+    ok.style.display = 'inline';
+    setTimeout(() => { ok.style.display = 'none'; }, 2500);
+  });
 }
 
-function showLoading(msg) {
-  document.getElementById('loadingOverlay').style.display = 'flex';
-  document.getElementById('loadingText').textContent = msg;
+function openMailApp(subjectId, bodyId) {
+  const su = encodeURIComponent(document.getElementById(subjectId).value);
+  const bo = encodeURIComponent(document.getElementById(bodyId).value);
+  window.location.href = `mailto:?subject=${su}&body=${bo}`;
 }
 
-function hideLoading() {
-  document.getElementById('loadingOverlay').style.display = 'none';
+function openGmail(subjectId, bodyId) {
+  const su = encodeURIComponent(document.getElementById(subjectId).value);
+  const bo = encodeURIComponent(document.getElementById(bodyId).value);
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${su}&body=${bo}`, '_blank');
+}
+
+/* ─────────────────────────────────────────────────────
+   Single email modal
+───────────────────────────────────────────────────── */
+function openEmail(key) {
+  const d = allPrograms.find(x => x.key === key);
+  if (!d) return;
+  map.closePopup();
+  const s = getSender();
+  document.getElementById('emailSubject').value  = `Outdoor Play Equipment for ${d.site_name || 'your facility'}`;
+  document.getElementById('emailBody').value     = buildEmailBody(d, s);
+  document.getElementById('emailSubtitle').textContent = `to ${d.site_name || 'daycare'}`;
+  document.getElementById('copyOk1').style.display = 'none';
+  document.getElementById('emailModal').style.display = 'flex';
+}
+
+function closeEmail() { document.getElementById('emailModal').style.display = 'none'; }
+
+/* ─────────────────────────────────────────────────────
+   Send-all queue
+───────────────────────────────────────────────────── */
+function openSendAll() {
+  sendQueue = filtered.filter(d => !d.contacted && !d.responded);
+  if (!sendQueue.length) {
+    alert('No uncontacted daycares in the current view.\n\nTry removing the "Hide contacted" filter or selecting a different ZIP code.');
+    return;
+  }
+  sqIndex = 0;
+  loadSqItem();
+  document.getElementById('sendAllModal').style.display = 'flex';
+}
+
+function loadSqItem() {
+  const d     = sendQueue[sqIndex];
+  const total = sendQueue.length;
+  const pct   = (sqIndex / total) * 100;
+
+  document.getElementById('sqProgressLabel').textContent  = `Email ${sqIndex + 1} of ${total} — ${total - sqIndex - 1} remaining`;
+  document.getElementById('sqProgressFill').style.width   = pct + '%';
+  document.getElementById('sqTo').value      = `${d.site_name || 'Unknown'} — ${d.address || ''} ${d.zip || ''}${d.phone_number ? '  |  ' + d.phone_number : ''}`;
+  document.getElementById('sqSubject').value = `Outdoor Play Equipment for ${d.site_name || 'your facility'}`;
+  document.getElementById('sqBody').value    = buildEmailBody(d, getSender());
+  document.getElementById('sqCopyOk').style.display = 'none';
+}
+
+function sqAdvance(markAsSent) {
+  if (markAsSent) {
+    const d = sendQueue[sqIndex];
+    contacted.add(d.key); saveContacted();
+    const i = allPrograms.findIndex(x => x.key === d.key);
+    if (i >= 0) allPrograms[i] = { ...allPrograms[i], contacted:true };
+    const j = filtered.findIndex(x => x.key === d.key);
+    if (j >= 0) filtered[j] = { ...filtered[j], contacted:true };
+    const m = markers[d.key];
+    if (m) m.setIcon(ICONS.contacted);
+  }
+  sqIndex++;
+  if (sqIndex >= sendQueue.length) {
+    closeSendAll();
+    renderList(); updateStats();
+    alert(`Campaign complete! You drafted emails for ${sendQueue.length} daycare${sendQueue.length!==1?'s':''}.`);
+    return;
+  }
+  loadSqItem();
+}
+
+function sqSkip()            { sqAdvance(false); }
+function sqSend(method) {
+  if (method === 'gmail') {
+    openGmail('sqSubject', 'sqBody');
+  } else {
+    openMailApp('sqSubject', 'sqBody');
+  }
+  setTimeout(() => sqAdvance(true), 400);
+}
+
+// Override copyEmail for queue: copy then advance
+const _origCopyEmail = copyEmail;
+document.addEventListener('DOMContentLoaded', () => {});
+// sqCopy handled via copyEmail('sqSubject','sqBody','sqCopyOk') and then advance
+document.querySelector && (function patchSqCopy() {
+  const btn = document.querySelector('[onclick="copyEmail(\'sqSubject\',\'sqBody\',\'sqCopyOk\')"]');
+  if (btn) btn.onclick = () => { _origCopyEmail('sqSubject','sqBody','sqCopyOk'); setTimeout(() => sqAdvance(true), 600); };
+})();
+
+function closeSendAll() {
+  document.getElementById('sendAllModal').style.display = 'none';
+  renderList(); updateStats();
+}
+
+/* ─────────────────────────────────────────────────────
+   Export CSV
+───────────────────────────────────────────────────── */
+function exportCSV() {
+  const rows = filtered.map(d => [
+    d.site_name        || '',
+    d.address          || '',
+    d.zip              || '',
+    d.phone_number     || '',
+    d.ages_served      || '',
+    d.quality_rating   || 'Licensed',
+    d.priority,
+    d.responded ? 'Responded' : d.contacted ? 'Contacted' : 'Not Contacted',
+    d.latitude  || '',
+    d.longitude || '',
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+
+  const csv  = ['"Name","Address","ZIP","Phone","Ages","Rating","Priority","Status","Lat","Lng"', ...rows].join('\r\n');
+  const zip  = document.getElementById('zipSelect').value || 'All';
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(new Blob([csv], { type:'text/csv' }));
+  a.download = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 /* ─────────────────────────────────────────────────────
@@ -986,98 +1044,30 @@ function saveSender() {
     email:   document.getElementById('senderEmail').value,
   }));
 }
-
 function loadSender() {
   const s = JSON.parse(localStorage.getItem('chi_dc_sender') || '{}');
   if (s.name)    document.getElementById('senderName').value    = s.name;
   if (s.company) document.getElementById('senderCompany').value = s.company;
   if (s.phone)   document.getElementById('senderPhone').value   = s.phone;
   if (s.email)   document.getElementById('senderEmail').value   = s.email;
-  if (s.name || s.company) document.getElementById('senderDetails').open = false;
-}
-
-function getSender() {
-  return {
-    name:    document.getElementById('senderName').value.trim()    || '[Your Name]',
-    company: document.getElementById('senderCompany').value.trim() || '[Your Company]',
-    phone:   document.getElementById('senderPhone').value.trim()   || '[Your Phone]',
-    email:   document.getElementById('senderEmail').value.trim()   || '[Your Email]',
-  };
 }
 
 /* ─────────────────────────────────────────────────────
-   Email modal
+   Utilities
 ───────────────────────────────────────────────────── */
-function openEmail(key) {
-  const d = allPrograms.find(x => x.key === key);
-  if (!d) return;
-  map.closePopup();
-
-  const s       = getSender();
-  const dcName  = d.site_name || 'your facility';
-  const address = d.address   ? `${d.address}, Chicago IL ${d.zip || ''}` : 'Chicago, IL';
-  const ages    = d.ages_served || 'young children';
-
-  const subject = `Outdoor Play Equipment for ${dcName}`;
-
-  const body =
-`Dear ${dcName} Team,
-
-I hope this message finds you well. My name is ${s.name}, and I represent ${s.company}, a provider of high-quality outdoor play equipment for early childhood learning environments.
-
-We work with daycare centers and early learning programs across the Chicago area to design and install safe, durable, and engaging play spaces that children love — and that meet all ASTM and CPSC safety standards.
-
-I noticed that ${dcName} serves ${ages} at ${address}, and I'd love to discuss how we could enhance your outdoor play area. Whether you're looking to replace aging equipment, expand your play space, or start fresh, we offer a free site visit and no-obligation quote.
-
-Here's what we can offer:
-  • Custom equipment layouts designed for your available space
-  • Installation by our certified team
-  • Warranty and ongoing maintenance support
-  • Flexible financing options
-
-I'd love to schedule a brief call or site visit at your convenience. Please feel free to reach me at ${s.phone} or reply to this email at ${s.email}.
-
-Thank you for the wonderful work you do for Chicago's children. I look forward to connecting.
-
-Warm regards,
-${s.name}
-${s.company}
-${s.phone}
-${s.email}`;
-
-  document.getElementById('emailSubject').value     = subject;
-  document.getElementById('emailBody').value        = body;
-  document.getElementById('emailModalSubtitle').textContent = `to ${dcName}`;
-  document.getElementById('copyOk').style.display   = 'none';
-  document.getElementById('emailModal').style.display = 'flex';
+async function apiFetch(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`API ${r.status}`);
+  return r.json();
 }
 
-function closeEmail() {
-  document.getElementById('emailModal').style.display = 'none';
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function copyEmail() {
-  const subject = document.getElementById('emailSubject').value;
-  const body    = document.getElementById('emailBody').value;
-  const text    = `Subject: ${subject}\n\n${body}`;
-  navigator.clipboard.writeText(text).then(() => {
-    const ok = document.getElementById('copyOk');
-    ok.style.display = 'inline';
-    setTimeout(() => { ok.style.display = 'none'; }, 2500);
-  });
-}
-
-function openMailApp() {
-  const subject = encodeURIComponent(document.getElementById('emailSubject').value);
-  const body    = encodeURIComponent(document.getElementById('emailBody').value);
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
-}
-
-function openGmail() {
-  const subject = encodeURIComponent(document.getElementById('emailSubject').value);
-  const body    = encodeURIComponent(document.getElementById('emailBody').value);
-  window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, '_blank');
-}
+function setList(html) { document.getElementById('daycareList').innerHTML = html; }
+function showLoading(msg) { document.getElementById('loadingOverlay').style.display='flex'; document.getElementById('loadingText').textContent=msg; }
+function hideLoading()    { document.getElementById('loadingOverlay').style.display='none'; }
 
 /* ─────────────────────────────────────────────────────
    Init
