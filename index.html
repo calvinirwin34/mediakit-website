@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chicago Daycare Play Equipment Lead Finder</title>
+  <title>Naperville Area Daycare Play Equipment Lead Finder</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -17,7 +17,6 @@
       overflow: hidden;
     }
 
-    /* ── Header ── */
     header {
       background: #064e3b;
       color: white;
@@ -35,13 +34,11 @@
 
     .app-body { display: flex; flex: 1; overflow: hidden; }
 
-    /* ── Sidebar ── */
+    /* Sidebar */
     .sidebar {
-      width: 350px;
-      min-width: 350px;
+      width: 350px; min-width: 350px;
       background: #fff;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       overflow: hidden;
       border-right: 1px solid #e2e8f0;
       box-shadow: 2px 0 10px rgba(0,0,0,0.06);
@@ -49,101 +46,49 @@
     }
 
     /* Sender strip */
-    .sender-strip {
-      padding: 8px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      background: #f0fdf4;
-    }
+    .sender-strip { padding: 8px 16px; border-bottom: 1px solid #e2e8f0; background: #f0fdf4; }
     .sender-strip summary {
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: #064e3b;
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
+      font-size: 0.74rem; font-weight: 600; color: #064e3b;
+      cursor: pointer; list-style: none; display: flex; align-items: center; gap: 5px;
     }
     .sender-strip summary::-webkit-details-marker { display: none; }
     .sender-strip summary::before { content: '▶'; font-size: 0.58rem; transition: transform 0.2s; }
     .sender-strip[open] summary::before { transform: rotate(90deg); }
-    .sender-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      margin-top: 7px;
-    }
+    .sender-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 7px; }
     .sender-grid input {
-      padding: 6px 8px;
-      border: 1px solid #bbf7d0;
-      border-radius: 5px;
-      font-size: 0.77rem;
-      color: #1e293b;
-      background: #fff;
+      padding: 6px 8px; border: 1px solid #bbf7d0; border-radius: 5px;
+      font-size: 0.77rem; color: #1e293b; background: #fff;
     }
     .sender-grid input:focus { outline: 2px solid #059669; outline-offset: 1px; }
     .sender-grid input.full { grid-column: 1 / -1; }
 
     /* Controls */
-    .controls {
-      padding: 12px 16px 10px;
-      border-bottom: 1px solid #e2e8f0;
-      background: #f8fafc;
-    }
-    .controls label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #475569;
-      display: block;
-      margin-bottom: 4px;
-    }
+    .controls { padding: 12px 16px 10px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+    .controls label { font-size: 0.75rem; font-weight: 600; color: #475569; display: block; margin-bottom: 4px; }
     .search-input {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      color: #1e293b;
-      background: #fff;
-      margin-bottom: 7px;
+      width: 100%; padding: 8px 10px;
+      border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.88rem; color: #1e293b; background: #fff; margin-bottom: 7px;
     }
     .search-input:focus { outline: 2px solid #059669; outline-offset: 1px; }
     .controls select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      color: #1e293b;
-      background: #fff;
-      margin-bottom: 9px;
-      cursor: pointer;
+      width: 100%; padding: 8px 10px;
+      border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.88rem; color: #1e293b; background: #fff;
+      margin-bottom: 9px; cursor: pointer;
     }
     .controls select:focus { outline: 2px solid #059669; outline-offset: 1px; }
     .notice {
-      font-size: 0.69rem;
-      color: #64748b;
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 5px;
-      padding: 6px 8px;
-      line-height: 1.5;
+      font-size: 0.69rem; color: #64748b;
+      background: #f1f5f9; border: 1px solid #e2e8f0;
+      border-radius: 5px; padding: 6px 8px; line-height: 1.5;
     }
 
-    /* Stats — 4 cards */
-    .stats {
-      padding: 8px 12px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      gap: 6px;
-    }
+    /* Stats */
+    .stats { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 6px; }
     .stat-card {
-      flex: 1;
-      text-align: center;
-      background: #f8fafc;
-      border-radius: 7px;
-      padding: 6px 2px;
-      border: 1px solid #e2e8f0;
+      flex: 1; text-align: center; background: #f8fafc;
+      border-radius: 7px; padding: 6px 2px; border: 1px solid #e2e8f0;
     }
     .stat-card .num { font-size: 1.2rem; font-weight: 700; line-height: 1; }
     .stat-card .lbl { font-size: 0.58rem; color: #64748b; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -153,61 +98,38 @@
     .s-responded .num { color: #b45309; }
 
     /* Legend */
-    .legend {
-      padding: 7px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px 12px;
-    }
+    .legend { padding: 7px 16px; border-bottom: 1px solid #e2e8f0; display: flex; flex-wrap: wrap; gap: 5px 12px; }
     .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.69rem; color: #475569; }
     .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); }
 
     /* Results header */
     .results-header {
-      padding: 7px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e2e8f0;
-      background: #f8fafc;
+      padding: 7px 16px; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid #e2e8f0; background: #f8fafc;
     }
     .results-header span { font-size: 0.78rem; font-weight: 600; color: #475569; }
     .results-header select {
-      font-size: 0.72rem;
-      padding: 3px 6px;
-      border: 1px solid #e2e8f0;
-      border-radius: 4px;
-      color: #475569;
-      background: #fff;
-      cursor: pointer;
+      font-size: 0.72rem; padding: 3px 6px;
+      border: 1px solid #e2e8f0; border-radius: 4px;
+      color: #475569; background: #fff; cursor: pointer;
     }
 
     /* Filter row */
     .filter-row {
-      padding: 5px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      padding: 5px 16px; border-bottom: 1px solid #e2e8f0;
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
     .filter-row label { font-size: 0.7rem; color: #475569; cursor: pointer; display: flex; align-items: center; gap: 4px; }
     input[type=checkbox] { accent-color: #064e3b; cursor: pointer; }
 
-    /* Daycare list */
+    /* List */
     .daycare-list { flex: 1; overflow-y: auto; }
     .daycare-list::-webkit-scrollbar { width: 5px; }
     .daycare-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
     .daycare-item {
-      padding: 8px 14px;
-      border-bottom: 1px solid #f1f5f9;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: background 0.1s;
+      padding: 8px 14px; border-bottom: 1px solid #f1f5f9;
+      cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.1s;
     }
     .daycare-item:hover  { background: #f8fafc; }
     .daycare-item.active { background: #ecfdf5; border-left: 3px solid #064e3b; padding-left: 11px; }
@@ -235,46 +157,22 @@
     .b-responded { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 
     /* Footer */
-    .sidebar-footer {
-      padding: 8px 12px;
-      border-top: 1px solid #e2e8f0;
-      background: #f8fafc;
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+    .sidebar-footer { padding: 8px 12px; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-footer {
-      flex: 1;
-      min-width: 80px;
-      padding: 7px 6px;
-      border-radius: 6px;
-      font-size: 0.74rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      color: #475569;
-      transition: all 0.15s;
+      flex: 1; min-width: 70px; padding: 7px 6px;
+      border-radius: 6px; font-size: 0.74rem; font-weight: 600;
+      cursor: pointer; border: 1px solid #e2e8f0; background: #fff; color: #475569; transition: all 0.15s;
     }
     .btn-footer:hover:not(:disabled) { background: #064e3b; color: #fff; border-color: #064e3b; }
     .btn-footer:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-email-all {
-      flex: 1;
-      min-width: 80px;
-      padding: 7px 6px;
-      border-radius: 6px;
-      font-size: 0.74rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      background: #064e3b;
-      color: #fff;
-      transition: opacity 0.15s;
+      flex: 1; min-width: 70px; padding: 7px 6px;
+      border-radius: 6px; font-size: 0.74rem; font-weight: 600;
+      cursor: pointer; border: none; background: #064e3b; color: #fff; transition: opacity 0.15s;
     }
     .btn-email-all:hover:not(:disabled) { opacity: 0.85; }
     .btn-email-all:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* Empty state */
     .empty-state {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       height: 180px; color: #94a3b8; font-size: 0.84rem; gap: 10px;
@@ -283,24 +181,21 @@
 
     #map { flex: 1; }
 
-    /* ── Shared modal base ── */
+    /* Modal base */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.48);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.48);
       display: none; align-items: center; justify-content: center;
       z-index: 10000; padding: 16px;
     }
     .modal-box {
-      background: #fff;
-      border-radius: 12px;
+      background: #fff; border-radius: 12px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.28);
       width: 100%; max-width: 560px;
       display: flex; flex-direction: column;
       max-height: 90vh; overflow: hidden;
     }
     .modal-head {
-      padding: 13px 18px 11px;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 13px 18px 11px; border-bottom: 1px solid #e2e8f0;
       display: flex; align-items: flex-start; justify-content: space-between;
       background: #064e3b; color: #fff;
       border-radius: 12px 12px 0 0; flex-shrink: 0;
@@ -332,7 +227,6 @@
     .email-field input:focus, .email-field textarea:focus { outline: 2px solid #059669; outline-offset: 1px; }
     .email-field input[readonly] { background: #f8fafc; color: #64748b; }
 
-    /* Email action buttons */
     .btn-em {
       flex: 1; min-width: 100px; padding: 9px 8px;
       border-radius: 7px; font-size: 0.78rem; font-weight: 600;
@@ -345,11 +239,11 @@
     .btn-skip   { background: #e2e8f0; color: #475569; }
     .copy-ok { font-size: 0.71rem; color: #16a34a; font-weight: 600; align-self: center; display: none; }
 
-    /* Send-all progress bar */
+    /* Progress bar */
     .sq-progress-wrap { height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; margin-top: 6px; width: 200px; }
     .sq-progress-fill { height: 100%; background: #fff; border-radius: 3px; transition: width 0.3s; }
 
-    /* Loading overlay */
+    /* Loading */
     #loadingOverlay {
       position: fixed; inset: 0; background: rgba(255,255,255,0.85);
       display: none; flex-direction: column; align-items: center; justify-content: center;
@@ -369,17 +263,16 @@
 <header>
   <span class="logo">&#x1F6DD;</span>
   <div>
-    <h1>Chicago Daycare Play Equipment Lead Finder</h1>
-    <p>Identify early learning programs in need of new outdoor play equipment</p>
+    <h1>Naperville Area Daycare Play Equipment Lead Finder</h1>
+    <p>Naperville &bull; Aurora &bull; Bolingbrook &bull; Lisle &bull; Wheaton &bull; Downers Grove &amp; surrounding suburbs</p>
   </div>
 </header>
 
 <div class="app-body">
 
-  <!-- ── Sidebar ── -->
   <div class="sidebar">
 
-    <!-- Your details -->
+    <!-- Sender details -->
     <details class="sender-strip" id="senderDetails">
       <summary>&#9993; Your details for email templates</summary>
       <div class="sender-grid">
@@ -394,27 +287,26 @@
     <div class="controls">
       <label for="searchInput">Search by name or address</label>
       <input type="text" id="searchInput" class="search-input"
-             placeholder="e.g. Little Stars, 3800 N Austin…" oninput="applyFilters()" />
+             placeholder="e.g. Canvas Daycare, Aurora Ave…" oninput="applyFilters()" />
 
-      <label for="zipSelect">Filter by ZIP code</label>
-      <select id="zipSelect" onchange="applyFilters()">
-        <option value="">All ZIP codes</option>
+      <label for="citySelect">Filter by city</label>
+      <select id="citySelect" onchange="applyFilters()">
+        <option value="">All cities</option>
       </select>
 
       <p class="notice">
-        &#x1F534; <strong>High</strong> &mdash; basic license (likely needs upgrade) &nbsp;
-        &#x1F7E0; <strong>Medium</strong> &mdash; Bronze rated &nbsp;
-        &#x1F7E2; <strong>Low</strong> &mdash; Silver/Gold &nbsp;
-        &#x1F7E3; <strong>Contacted</strong> &nbsp;
-        &#11088; <strong>Responded</strong>
+        &#x1F534; <strong>High</strong> &mdash; standalone daycare, no online listing (may need equipment investment)<br>
+        &#x1F7E0; <strong>Medium</strong> &mdash; standalone daycare with partial online presence<br>
+        &#x1F7E2; <strong>Low</strong> &mdash; school/church-based program (likely has shared playground)<br>
+        Data: OpenStreetMap community data for the greater Naperville area.
       </p>
     </div>
 
-    <!-- Stats (4 cards) -->
+    <!-- Stats -->
     <div class="stats" id="statsBar" style="display:none">
       <div class="stat-card s-total">
         <div class="num" id="statTotal">0</div>
-        <div class="lbl">Programs</div>
+        <div class="lbl">Facilities</div>
       </div>
       <div class="stat-card s-high">
         <div class="num" id="statHigh">0</div>
@@ -445,15 +337,15 @@
       <select id="sortSelect" onchange="renderList()">
         <option value="priority">Priority first</option>
         <option value="name">By name A&ndash;Z</option>
-        <option value="zip">By ZIP code</option>
+        <option value="city">By city</option>
       </select>
     </div>
 
     <!-- Filter row -->
     <div class="filter-row" id="filterRow" style="display:none">
-      <label><input type="checkbox" id="chkHighOnly"       onchange="renderList()" /> High only</label>
-      <label><input type="checkbox" id="chkHideContacted"  onchange="renderList()" /> Hide contacted</label>
-      <label><input type="checkbox" id="chkRespondedOnly"  onchange="renderList()" /> Responded only</label>
+      <label><input type="checkbox" id="chkHighOnly"      onchange="renderList()" /> High only</label>
+      <label><input type="checkbox" id="chkHideContacted" onchange="renderList()" /> Hide contacted</label>
+      <label><input type="checkbox" id="chkRespondedOnly" onchange="renderList()" /> Responded only</label>
     </div>
 
     <!-- List -->
@@ -462,17 +354,17 @@
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.4">
           <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
         </svg>
-        Loading Chicago early learning data&hellip;
+        Loading Naperville area daycare data&hellip;
       </div>
     </div>
 
     <!-- Footer -->
     <div class="sidebar-footer">
       <button class="btn-email-all" id="emailAllBtn" onclick="openSendAll()" disabled>
-        &#9993; Email All Leads
+        &#9993; Email All
       </button>
       <button class="btn-footer" id="exportBtn" onclick="exportCSV()" disabled>&#11015; CSV</button>
-      <button class="btn-footer" id="clearBtn"  onclick="clearAll()"   disabled>&#x21BA; Reset</button>
+      <button class="btn-footer" id="clearBtn"  onclick="clearAll()"  disabled>&#x21BA; Reset</button>
     </div>
 
   </div><!-- /sidebar -->
@@ -480,25 +372,16 @@
   <div id="map"></div>
 </div>
 
-<!-- ── Single email modal ── -->
+<!-- Single email modal -->
 <div class="modal-overlay" id="emailModal" onclick="if(event.target===this)closeEmail()">
   <div class="modal-box">
     <div class="modal-head">
-      <div>
-        <h2>&#9993; Draft Email</h2>
-        <p id="emailSubtitle">to daycare</p>
-      </div>
+      <div><h2>&#9993; Draft Email</h2><p id="emailSubtitle">to daycare</p></div>
       <button class="modal-close" onclick="closeEmail()">&#x2715;</button>
     </div>
     <div class="modal-body">
-      <div class="email-field">
-        <label>Subject</label>
-        <input type="text" id="emailSubject" />
-      </div>
-      <div class="email-field">
-        <label>Body</label>
-        <textarea id="emailBody" rows="14"></textarea>
-      </div>
+      <div class="email-field"><label>Subject</label><input type="text" id="emailSubject" /></div>
+      <div class="email-field"><label>Body</label><textarea id="emailBody" rows="14"></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn-em btn-copy"   onclick="copyEmail('emailSubject','emailBody','copyOk1')">&#128203; Copy</button>
@@ -509,36 +392,25 @@
   </div>
 </div>
 
-<!-- ── Send-all queue modal ── -->
+<!-- Send-all queue modal -->
 <div class="modal-overlay" id="sendAllModal" onclick="if(event.target===this)closeSendAll()">
   <div class="modal-box">
     <div class="modal-head">
       <div style="flex:1">
         <h2>&#9993; Email Campaign</h2>
         <p id="sqProgressLabel">Loading&hellip;</p>
-        <div class="sq-progress-wrap">
-          <div class="sq-progress-fill" id="sqProgressFill" style="width:0%"></div>
-        </div>
+        <div class="sq-progress-wrap"><div class="sq-progress-fill" id="sqProgressFill" style="width:0%"></div></div>
       </div>
       <button class="modal-close" onclick="closeSendAll()">&#x2715;</button>
     </div>
     <div class="modal-body">
-      <div class="email-field">
-        <label>Sending to</label>
-        <input type="text" id="sqTo" readonly />
-      </div>
-      <div class="email-field">
-        <label>Subject</label>
-        <input type="text" id="sqSubject" />
-      </div>
-      <div class="email-field">
-        <label>Body</label>
-        <textarea id="sqBody" rows="13"></textarea>
-      </div>
+      <div class="email-field"><label>Sending to</label><input type="text" id="sqTo" readonly /></div>
+      <div class="email-field"><label>Subject</label><input type="text" id="sqSubject" /></div>
+      <div class="email-field"><label>Body</label><textarea id="sqBody" rows="13"></textarea></div>
     </div>
     <div class="modal-foot">
       <button class="btn-em btn-skip"   onclick="sqSkip()">Skip &rarr;</button>
-      <button class="btn-em btn-copy"   onclick="copyEmail('sqSubject','sqBody','sqCopyOk')">&#128203; Copy &amp; Next</button>
+      <button class="btn-em btn-copy"   onclick="sqCopyAndNext()">&#128203; Copy &amp; Next</button>
       <button class="btn-em btn-mailto" onclick="sqSend('mailto')">&#128236; Mail App &amp; Next</button>
       <button class="btn-em btn-gmail"  onclick="sqSend('gmail')">&#9993; Gmail &amp; Next</button>
       <span class="copy-ok" id="sqCopyOk">&#10003; Copied!</span>
@@ -549,16 +421,19 @@
 <!-- Loading overlay -->
 <div id="loadingOverlay">
   <div class="spinner"></div>
-  <div id="loadingText">Loading Chicago early learning programs&hellip;</div>
+  <div id="loadingText">Loading Naperville area daycare data&hellip;</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ─────────────────────────────────────────────────────
-   Config
+   Config — bounding box covers greater Naperville area
+   (Naperville, Aurora, Bolingbrook, Lisle, Wheaton,
+    Downers Grove, Woodridge, Romeoville, Plainfield, Joliet)
 ───────────────────────────────────────────────────── */
-const API_URL    = 'https://data.cityofchicago.org/resource/ck29-hb9r.json';
-const CHI_CENTER = [41.8781, -87.6298];
+const OVERPASS_URL = 'https://overpass.openstreetmap.fr/api/interpreter';
+const BBOX         = '41.55,-88.50,42.05,-87.85';
+const NAP_CENTER   = [41.7508, -88.1535];
 
 /* ─────────────────────────────────────────────────────
    State
@@ -566,17 +441,15 @@ const CHI_CENTER = [41.8781, -87.6298];
 let allPrograms = [];
 let filtered    = [];
 let markers     = {};
-let contacted   = new Set(JSON.parse(localStorage.getItem('chi_dc_contacted')  || '[]'));
-let responded   = new Set(JSON.parse(localStorage.getItem('chi_dc_responded')  || '[]'));
-
-// Send-all queue
-let sendQueue = [];
-let sqIndex   = 0;
+let contacted   = new Set(JSON.parse(localStorage.getItem('nap_dc_contacted') || '[]'));
+let responded   = new Set(JSON.parse(localStorage.getItem('nap_dc_responded') || '[]'));
+let sendQueue   = [];
+let sqIndex     = 0;
 
 /* ─────────────────────────────────────────────────────
    Map
 ───────────────────────────────────────────────────── */
-const map = L.map('map').setView(CHI_CENTER, 11);
+const map = L.map('map').setView(NAP_CENTER, 11);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
   maxZoom: 19,
@@ -588,26 +461,23 @@ const markerLayer = L.layerGroup().addTo(map);
 ───────────────────────────────────────────────────── */
 const mkIcon = (color, size) => L.divIcon({
   className: '',
-  html: `<div style="width:${size}px;height:${size}px;border-radius:50%;
-           background:${color};border:2px solid #fff;
-           box-shadow:0 1px 5px rgba(0,0,0,0.5)"></div>`,
-  iconSize: [size, size], iconAnchor: [size/2, size/2],
+  html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.5)"></div>`,
+  iconSize: [size,size], iconAnchor: [size/2,size/2],
 });
 const ICONS = {
-  high:      mkIcon('#dc2626', 16),
-  medium:    mkIcon('#d97706', 13),
-  low:       mkIcon('#16a34a', 11),
-  contacted: mkIcon('#7c3aed', 13),
-  responded: mkIcon('#b45309', 15),
+  high: mkIcon('#dc2626',16), medium: mkIcon('#d97706',13),
+  low:  mkIcon('#16a34a',11), contacted: mkIcon('#7c3aed',13), responded: mkIcon('#b45309',15),
 };
 
 /* ─────────────────────────────────────────────────────
    Priority
+   High   = childcare amenity with no phone AND no website
+   Medium = childcare amenity with phone or website
+   Low    = kindergarten / school-based
 ───────────────────────────────────────────────────── */
-function getPriority(rating) {
-  const r = (rating || '').toLowerCase();
-  if (r === 'bronze')                return 'medium';
-  if (r === 'silver' || r === 'gold') return 'low';
+function getPriority(d) {
+  if (d.amenity === 'kindergarten') return 'low';
+  if (d.phone || d.website)         return 'medium';
   return 'high';
 }
 
@@ -618,53 +488,98 @@ function getStatus(d) {
 }
 
 /* ─────────────────────────────────────────────────────
-   Load all programs
+   Load from Overpass
 ───────────────────────────────────────────────────── */
 async function loadAll() {
-  showLoading('Loading Chicago early learning programs…');
+  showLoading('Fetching daycare data from OpenStreetMap…');
   try {
-    const raw = await apiFetch(API_URL + '?$limit=1000&$where=latitude IS NOT NULL');
-    allPrograms = raw.filter(d => d.latitude && d.longitude).map(d => ({
-      ...d,
-      priority:  getPriority(d.quality_rating),
-      contacted: contacted.has(d.key),
-      responded: responded.has(d.key),
-    }));
-    populateZipFilter();
+    const query =
+      `[out:json][timeout:30];` +
+      `(node["amenity"~"childcare|kindergarten"](${BBOX});` +
+      ` way["amenity"~"childcare|kindergarten"](${BBOX}););` +
+      `out center tags;`;
+
+    const res  = await fetch(OVERPASS_URL, {
+      method: 'POST',
+      body: query,
+      headers: { 'Content-Type': 'text/plain' },
+    });
+    if (!res.ok) throw new Error(`Overpass ${res.status}`);
+    const data = await res.json();
+
+    allPrograms = data.elements
+      .filter(el => (el.lat ?? el.center?.lat) && (el.lon ?? el.center?.lon))
+      .map(el => {
+        const t   = el.tags || {};
+        const lat = el.lat ?? el.center?.lat;
+        const lon = el.lon ?? el.center?.lon;
+        const num = t['addr:housenumber'] || '';
+        const st  = t['addr:street']      || '';
+        const address = [num, st].filter(Boolean).join(' ') || null;
+        const city    = t['addr:city'] || t['addr:town'] || null;
+        const zip     = (t['addr:postcode'] || '').replace(/[^0-9]/g,'').slice(0,5) || null;
+        const phone   = t['phone'] || t['contact:phone'] || null;
+        const website = t['website'] || t['contact:website'] || null;
+        const d = {
+          id: String(el.id), name: t['name'] || null,
+          lat, lon, address, city, zip, phone, website,
+          amenity: t['amenity'],
+          opening_hours: t['opening_hours'] || null,
+        };
+        d.priority  = getPriority(d);
+        d.contacted = contacted.has(d.id);
+        d.responded = responded.has(d.id);
+        return d;
+      });
+
+    populateCityFilter();
     applyFilters();
     updateStats();
     ['statsBar','legendBar','resultsHeader','filterRow'].forEach(id =>
       document.getElementById(id).style.display = 'flex');
-    document.getElementById('exportBtn').disabled  = false;
-    document.getElementById('clearBtn').disabled   = false;
+    document.getElementById('exportBtn').disabled   = false;
+    document.getElementById('clearBtn').disabled    = false;
     document.getElementById('emailAllBtn').disabled = false;
+
   } catch(e) {
     console.error(e);
-    setList('<div class="empty-state">Failed to load data. Check your connection and refresh.</div>');
+    setList(`<div class="empty-state">
+      Failed to load data.<br>
+      <small style="font-size:0.75rem;color:#94a3b8">Check your connection and refresh the page.</small>
+    </div>`);
   } finally {
     hideLoading();
   }
 }
 
 /* ─────────────────────────────────────────────────────
-   ZIP filter
+   City filter
 ───────────────────────────────────────────────────── */
-function populateZipFilter() {
-  const zips = [...new Set(allPrograms.map(d => (d.zip||'').trim()).filter(Boolean))].sort();
-  const sel  = document.getElementById('zipSelect');
-  sel.innerHTML = '<option value="">All ZIP codes</option>';
-  zips.forEach(z => { const o = document.createElement('option'); o.value = o.textContent = z; sel.appendChild(o); });
+function populateCityFilter() {
+  const cities = [...new Set(
+    allPrograms.map(d => d.city).filter(Boolean).map(c => titleCase(c))
+  )].sort();
+  const sel = document.getElementById('citySelect');
+  sel.innerHTML = '<option value="">All cities</option>';
+  cities.forEach(c => {
+    const o = document.createElement('option');
+    o.value = o.textContent = c;
+    sel.appendChild(o);
+  });
 }
 
 /* ─────────────────────────────────────────────────────
    Filters
 ───────────────────────────────────────────────────── */
 function applyFilters() {
-  const q   = document.getElementById('searchInput').value.trim().toLowerCase();
-  const zip = document.getElementById('zipSelect').value.trim();
-  filtered  = allPrograms.filter(d => {
-    const n = (d.site_name||'').toLowerCase(), a = (d.address||'').toLowerCase();
-    return (!q || n.includes(q) || a.includes(q)) && (!zip || (d.zip||'').trim() === zip);
+  const q    = document.getElementById('searchInput').value.trim().toLowerCase();
+  const city = document.getElementById('citySelect').value.trim().toLowerCase();
+  filtered = allPrograms.filter(d => {
+    const name = (d.name    || '').toLowerCase();
+    const addr = (d.address || '').toLowerCase();
+    const dc   = (d.city    || '').toLowerCase();
+    return (!q    || name.includes(q) || addr.includes(q)) &&
+           (!city || dc === city);
   });
   renderMarkers();
   renderList();
@@ -678,12 +593,14 @@ function renderMarkers() {
   markerLayer.clearLayers();
   markers = {};
   const order = { low:0, medium:1, high:2, contacted:3, responded:4 };
-  [...filtered].sort((a,b) => order[getStatus(a)] - order[getStatus(b)]).forEach(d => {
-    const m = L.marker([+d.latitude, +d.longitude], { icon: ICONS[getStatus(d)] });
-    m.on('click', () => selectProgram(d.key));
-    m.addTo(markerLayer);
-    markers[d.key] = m;
-  });
+  [...filtered]
+    .sort((a,b) => order[getStatus(a)] - order[getStatus(b)])
+    .forEach(d => {
+      const m = L.marker([d.lat, d.lon], { icon: ICONS[getStatus(d)] });
+      m.on('click', () => selectProgram(d.id));
+      m.addTo(markerLayer);
+      markers[d.id] = m;
+    });
 }
 
 /* ─────────────────────────────────────────────────────
@@ -696,34 +613,34 @@ function renderList() {
   const respondedOnly = document.getElementById('chkRespondedOnly')?.checked;
 
   let list = [...filtered];
-  if (highOnly)      list = list.filter(d => d.priority === 'high' && !d.contacted && !d.responded);
+  if (highOnly)      list = list.filter(d => d.priority==='high' && !d.contacted && !d.responded);
   if (hideContacted) list = list.filter(d => !d.contacted && !d.responded);
   if (respondedOnly) list = list.filter(d => d.responded);
 
   const priOrder = { high:0, medium:1, low:2, contacted:3, responded:4 };
-  if (sort === 'priority') list.sort((a,b) => priOrder[getStatus(a)] - priOrder[getStatus(b)]);
-  if (sort === 'name')     list.sort((a,b) => (a.site_name||'').localeCompare(b.site_name||''));
-  if (sort === 'zip')      list.sort((a,b) => (a.zip||'').localeCompare(b.zip||''));
+  if (sort==='priority') list.sort((a,b) => priOrder[getStatus(a)] - priOrder[getStatus(b)]);
+  if (sort==='name')     list.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  if (sort==='city')     list.sort((a,b) => (a.city||'').localeCompare(b.city||''));
 
   document.getElementById('resultsCount').textContent = `${list.length} result${list.length!==1?'s':''}`;
+  if (!list.length) { setList('<div class="empty-state">No facilities match the current filters.</div>'); return; }
 
-  if (!list.length) { setList('<div class="empty-state">No programs match the current filters.</div>'); return; }
-
-  const STATUS_ICON  = { high:'icon-high', medium:'icon-medium', low:'icon-low', contacted:'icon-contacted', responded:'icon-responded' };
-  const STATUS_CHAR  = { high:'!', medium:'~', low:'✓', contacted:'✓', responded:'★' };
-  const STATUS_BADGE = { high:'b-high', medium:'b-medium', low:'b-low', contacted:'b-contacted', responded:'b-responded' };
-  const STATUS_TEXT  = { high:'High', medium:'Bronze', low:null, contacted:'Contacted', responded:'Responded ★' };
+  const ICON_CLS  = { high:'icon-high',medium:'icon-medium',low:'icon-low',contacted:'icon-contacted',responded:'icon-responded' };
+  const ICON_CHAR = { high:'!',medium:'~',low:'✓',contacted:'✓',responded:'★' };
+  const BADGE_CLS = { high:'b-high',medium:'b-medium',low:'b-low',contacted:'b-contacted',responded:'b-responded' };
+  const BADGE_TXT = { high:'High',medium:'Medium',low:'Low',contacted:'Contacted',responded:'Responded ★' };
 
   setList(list.map(d => {
-    const s    = getStatus(d);
-    const txt  = STATUS_TEXT[s] ?? (d.quality_rating || 'Low');
-    return `<div class="daycare-item" id="item-${d.key}" onclick="selectProgram('${d.key}')">
-      <div class="item-icon ${STATUS_ICON[s]}">${STATUS_CHAR[s]}</div>
+    const s = getStatus(d);
+    const displayName = d.name ? titleCase(d.name) : '<em style="color:#94a3b8">Unnamed facility</em>';
+    const meta  = [d.address, d.city ? titleCase(d.city) : null].filter(Boolean).join(', ');
+    return `<div class="daycare-item" id="item-${d.id}" onclick="selectProgram('${d.id}')">
+      <div class="item-icon ${ICON_CLS[s]}">${ICON_CHAR[s]}</div>
       <div class="item-info">
-        <div class="item-name">${esc(d.site_name||'Unknown')}</div>
-        <div class="item-meta">${esc(d.address||'')} &middot; ${d.zip||''}</div>
+        <div class="item-name">${displayName}</div>
+        <div class="item-meta">${esc(meta) || '<em>No address listed</em>'}</div>
       </div>
-      <span class="badge ${STATUS_BADGE[s]}">${esc(txt)}</span>
+      <span class="badge ${BADGE_CLS[s]}">${BADGE_TXT[s]}</span>
     </div>`;
   }).join(''));
 }
@@ -731,68 +648,62 @@ function renderList() {
 /* ─────────────────────────────────────────────────────
    Select / popup
 ───────────────────────────────────────────────────── */
-function selectProgram(key) {
-  const d = allPrograms.find(x => x.key === key);
+function selectProgram(id) {
+  const d = allPrograms.find(x => x.id === id);
   if (!d) return;
 
   document.querySelectorAll('.daycare-item').forEach(el => el.classList.remove('active'));
-  const item = document.getElementById(`item-${key}`);
+  const item = document.getElementById(`item-${id}`);
   if (item) { item.classList.add('active'); item.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
 
-  const mk = markers[key];
+  const mk = markers[id];
   if (!mk) return;
   map.panTo(mk.getLatLng(), { animate:true });
 
-  const priBg  = { high:'#fee2e2', medium:'#fef3c7', low:'#dcfce7' }[d.priority] || '#f1f5f9';
-  const priFg  = { high:'#991b1b', medium:'#92400e', low:'#166534' }[d.priority] || '#475569';
-  const priMsg = {
-    high:   '&#9888; High Priority &mdash; basic license, likely needs new equipment',
-    medium: '&#128997; Medium Priority &mdash; Bronze rated',
-    low:    '&#9989; Lower Priority &mdash; ' + (d.quality_rating||'') + ' rated',
+  const displayName = d.name ? titleCase(d.name) : 'This facility';
+  const fullAddr    = [d.address, d.city ? titleCase(d.city) : null, d.zip].filter(Boolean).join(', ');
+  const priBg       = { high:'#fee2e2', medium:'#fef3c7', low:'#dcfce7' }[d.priority] || '#f1f5f9';
+  const priFg       = { high:'#991b1b', medium:'#92400e', low:'#166534' }[d.priority] || '#475569';
+  const priMsg      = {
+    high:   '&#9888; High Priority &mdash; standalone daycare, minimal online presence',
+    medium: '&#128997; Medium Priority &mdash; standalone daycare with some online listing',
+    low:    '&#9989; Lower Priority &mdash; school / church-based program',
   }[d.priority] || '';
 
-  const phone   = d.phone_number ? `<a href="tel:${d.phone_number}" style="color:#064e3b;font-weight:600">${esc(d.phone_number)}</a>` : '<span style="color:#94a3b8">N/A</span>';
-  const ages    = d.ages_served ? esc(d.ages_served) : 'N/A';
-  const program = d.program_information ? `<div style="font-size:0.71rem;color:#64748b;margin-bottom:6px">${esc(d.program_information)}</div>` : '';
-  const website = d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener" style="color:#064e3b;font-size:0.74rem;display:block;margin-bottom:6px">Visit website &#8599;</a>` : '';
+  const phoneHtml   = d.phone   ? `<a href="tel:${esc(d.phone)}"   style="color:#064e3b;font-weight:600">${esc(d.phone)}</a>` : '<span style="color:#94a3b8">Not listed</span>';
+  const websiteHtml = d.website ? `<a href="${esc(d.website)}" target="_blank" rel="noopener" style="color:#064e3b;font-size:0.74rem;display:block;margin-bottom:6px">Visit website &#8599;</a>` : '';
+  const hoursHtml   = d.opening_hours ? `<div style="display:flex;justify-content:space-between;font-size:0.79rem;margin-bottom:9px"><span style="color:#64748b">Hours</span><span style="font-weight:600;text-align:right;max-width:160px">${esc(d.opening_hours)}</span></div>` : '';
 
   let actionBtn = '';
   if (d.responded) {
-    actionBtn = btn('&#9733; Responded', `unmarkResponded('${key}')`, '#78350f', '#fef3c7', '1px solid #fcd34d');
+    actionBtn = mkBtn('&#9733; Responded &mdash; tap to undo', `unmarkResponded('${id}')`, '#78350f', '#fef3c7', '1px solid #fcd34d');
   } else if (d.contacted) {
     actionBtn =
-      btn('&#9733; Mark as Responded', `markResponded('${key}')`, '#fff', '#b45309') +
-      btn('&#8617; Unmark Contacted',  `unmark('${key}')`,        '#374151', '#f3f4f6', '1px solid #e2e8f0');
+      mkBtn('&#9733; Mark as Responded', `markResponded('${id}')`, '#fff', '#b45309') +
+      mkBtn('&#8617; Unmark Contacted',  `unmark('${id}')`,        '#374151', '#f3f4f6', '1px solid #e2e8f0');
   } else {
-    actionBtn = btn('&#10003; Mark as Contacted', `mark('${key}')`, '#fff', '#7c3aed');
+    actionBtn = mkBtn('&#10003; Mark as Contacted', `mark('${id}')`, '#fff', '#7c3aed');
   }
 
   mk.bindPopup(`
-    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:240px;max-width:290px">
-      <div style="font-weight:700;font-size:0.94rem;margin-bottom:3px;color:#1e293b">${esc(d.site_name||'Unknown')}</div>
-      <div style="font-size:0.76rem;color:#64748b;margin-bottom:9px">${esc(d.address||'')}, Chicago IL ${d.zip||''}</div>
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-width:240px;max-width:295px">
+      <div style="font-weight:700;font-size:0.94rem;margin-bottom:3px;color:#1e293b">${esc(displayName)}</div>
+      <div style="font-size:0.76rem;color:#64748b;margin-bottom:9px">${esc(fullAddr) || 'Address not listed'}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.79rem;margin-bottom:4px">
-        <span style="color:#64748b">Phone</span>${phone}
+        <span style="color:#64748b">Phone</span>${phoneHtml}
       </div>
-      <div style="display:flex;justify-content:space-between;font-size:0.79rem;margin-bottom:4px">
-        <span style="color:#64748b">Ages</span>
-        <span style="font-weight:600;text-align:right;max-width:160px">${ages}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:0.79rem;margin-bottom:9px">
-        <span style="color:#64748b">Rating</span>
-        <span style="font-weight:600">${esc(d.quality_rating||'Licensed')}</span>
-      </div>
-      <div style="font-size:0.78rem;padding:6px 9px;border-radius:6px;background:${priBg};color:${priFg};margin-bottom:7px;font-weight:500">${priMsg}</div>
-      ${program}${website}
-      <button onclick="openEmail('${key}')" style="background:#064e3b;color:#fff;border:none;
+      ${hoursHtml}
+      <div style="font-size:0.79rem;padding:6px 9px;border-radius:6px;background:${priBg};color:${priFg};margin-bottom:7px;font-weight:500">${priMsg}</div>
+      ${websiteHtml}
+      <button onclick="openEmail('${id}')" style="background:#064e3b;color:#fff;border:none;
         padding:7px 10px;border-radius:6px;cursor:pointer;font-size:0.78rem;width:100%;font-weight:600;margin-bottom:5px">
         &#9993; Draft Email</button>
       ${actionBtn}
     </div>
-  `, { maxWidth:310 }).openPopup();
+  `, { maxWidth: 315 }).openPopup();
 }
 
-function btn(label, onclick, color, bg, border='none') {
+function mkBtn(label, onclick, color, bg, border='none') {
   return `<button onclick="${onclick}" style="background:${bg};color:${color};border:${border};
     padding:7px 10px;border-radius:6px;cursor:pointer;font-size:0.78rem;width:100%;font-weight:600;margin-top:4px">${label}</button>`;
 }
@@ -800,48 +711,34 @@ function btn(label, onclick, color, bg, border='none') {
 /* ─────────────────────────────────────────────────────
    Contact & Response tracking
 ───────────────────────────────────────────────────── */
-function mark(key) {
-  contacted.add(key); saveContacted();
-  patch(key, { contacted:true, responded:false });
-}
-function unmark(key) {
-  contacted.delete(key); saveContacted();
-  patch(key, { contacted:false });
-}
-function markResponded(key) {
-  responded.add(key); saveResponded();
-  contacted.add(key); saveContacted();
-  patch(key, { contacted:true, responded:true });
-}
-function unmarkResponded(key) {
-  responded.delete(key); saveResponded();
-  patch(key, { responded:false });
-}
+function mark(id)            { contacted.add(id); saveContacted(); patch(id,{contacted:true,responded:false}); }
+function unmark(id)          { contacted.delete(id); saveContacted(); patch(id,{contacted:false}); }
+function markResponded(id)   { responded.add(id); saveResponded(); contacted.add(id); saveContacted(); patch(id,{contacted:true,responded:true}); }
+function unmarkResponded(id) { responded.delete(id); saveResponded(); patch(id,{responded:false}); }
 
-function patch(key, changes) {
+function patch(id, changes) {
   [allPrograms, filtered].forEach(arr => {
-    const i = arr.findIndex(d => d.key === key);
+    const i = arr.findIndex(d => d.id === id);
     if (i >= 0) arr[i] = { ...arr[i], ...changes };
   });
-  const d = allPrograms.find(x => x.key === key);
+  const d = allPrograms.find(x => x.id === id);
   if (!d) return;
-  const m = markers[key];
+  const m = markers[id];
   if (m) m.setIcon(ICONS[getStatus(d)]);
-  renderList();
-  updateStats();
+  renderList(); updateStats();
   map.closePopup();
-  setTimeout(() => selectProgram(key), 80);
+  setTimeout(() => selectProgram(id), 80);
 }
 
-function saveContacted() { localStorage.setItem('chi_dc_contacted', JSON.stringify([...contacted])); }
-function saveResponded()  { localStorage.setItem('chi_dc_responded', JSON.stringify([...responded])); }
+function saveContacted() { localStorage.setItem('nap_dc_contacted', JSON.stringify([...contacted])); }
+function saveResponded()  { localStorage.setItem('nap_dc_responded', JSON.stringify([...responded])); }
 
 function clearAll() {
   if (!confirm('Reset all contacted and responded markers?')) return;
   contacted = new Set(); responded = new Set();
   saveContacted(); saveResponded();
   [allPrograms, filtered] = [allPrograms, filtered].map(arr =>
-    arr.map(d => ({ ...d, contacted:false, responded:false })));
+    arr.map(d => ({...d, contacted:false, responded:false})));
   renderMarkers(); renderList(); updateStats();
 }
 
@@ -868,26 +765,26 @@ function getSender() {
 }
 
 function buildEmailBody(d, s) {
-  const dcName  = d.site_name || 'your facility';
-  const address = d.address   ? `${d.address}, Chicago IL ${d.zip||''}` : 'Chicago, IL';
-  const ages    = d.ages_served || 'young children';
+  const dcName  = d.name    ? titleCase(d.name) : 'your facility';
+  const city    = d.city    ? titleCase(d.city) : 'your area';
+  const address = d.address ? `${d.address}, ${city}` : city;
   return `Dear ${dcName} Team,
 
 I hope this message finds you well. My name is ${s.name}, and I represent ${s.company}, a provider of high-quality outdoor play equipment for early childhood learning environments.
 
-We work with daycare centers and early learning programs across the Chicago area to design and install safe, durable, and engaging play spaces that children love — and that meet all ASTM and CPSC safety standards.
+We work with daycare centers and preschools across the greater Naperville area to design and install safe, durable, and engaging play spaces that children love — fully meeting ASTM and CPSC safety standards.
 
-I noticed that ${dcName} serves ${ages} at ${address}, and I'd love to discuss how we could enhance your outdoor play area. Whether you're replacing aging equipment, expanding your space, or starting fresh, we offer a free site visit and no-obligation quote.
+I came across ${dcName} at ${address}, and I'd love to discuss how we could enhance your outdoor play area. Whether you're looking to replace aging equipment, expand your current setup, or start from scratch, we offer a free site visit and no-obligation quote.
 
-What we provide:
-  • Custom layouts designed for your available space
-  • Installation by our certified team
-  • Warranty and ongoing maintenance support
-  • Flexible financing options
+Here's what we provide:
+  • Custom play area layouts designed for your available space
+  • Professional installation by our certified team
+  • Full warranty and ongoing maintenance support
+  • Flexible financing options to fit any budget
 
-I'd love to schedule a brief call or site visit at your convenience. Please reach me at ${s.phone} or reply to this email at ${s.email}.
+I'd love to schedule a quick call or site visit at your convenience. Please reach me at ${s.phone} or reply to this email at ${s.email}.
 
-Thank you for the wonderful work you do for Chicago's children. I look forward to connecting.
+Thank you for the amazing work you do for children in our community. I look forward to connecting!
 
 Warm regards,
 ${s.name}
@@ -897,42 +794,35 @@ ${s.email}`;
 }
 
 function copyEmail(subjectId, bodyId, okId) {
-  const subject = document.getElementById(subjectId).value;
-  const body    = document.getElementById(bodyId).value;
-  navigator.clipboard.writeText(`Subject: ${subject}\n\n${body}`).then(() => {
+  const text = `Subject: ${document.getElementById(subjectId).value}\n\n${document.getElementById(bodyId).value}`;
+  navigator.clipboard.writeText(text).then(() => {
     const ok = document.getElementById(okId);
     ok.style.display = 'inline';
     setTimeout(() => { ok.style.display = 'none'; }, 2500);
   });
 }
-
-function openMailApp(subjectId, bodyId) {
-  const su = encodeURIComponent(document.getElementById(subjectId).value);
-  const bo = encodeURIComponent(document.getElementById(bodyId).value);
-  window.location.href = `mailto:?subject=${su}&body=${bo}`;
+function openMailApp(subId, bodyId) {
+  window.location.href = `mailto:?subject=${encodeURIComponent(document.getElementById(subId).value)}&body=${encodeURIComponent(document.getElementById(bodyId).value)}`;
 }
-
-function openGmail(subjectId, bodyId) {
-  const su = encodeURIComponent(document.getElementById(subjectId).value);
-  const bo = encodeURIComponent(document.getElementById(bodyId).value);
-  window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${su}&body=${bo}`, '_blank');
+function openGmail(subId, bodyId) {
+  window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(document.getElementById(subId).value)}&body=${encodeURIComponent(document.getElementById(bodyId).value)}`, '_blank');
 }
 
 /* ─────────────────────────────────────────────────────
    Single email modal
 ───────────────────────────────────────────────────── */
-function openEmail(key) {
-  const d = allPrograms.find(x => x.key === key);
+function openEmail(id) {
+  const d = allPrograms.find(x => x.id === id);
   if (!d) return;
   map.closePopup();
   const s = getSender();
-  document.getElementById('emailSubject').value  = `Outdoor Play Equipment for ${d.site_name || 'your facility'}`;
+  const n = d.name ? titleCase(d.name) : 'the daycare';
+  document.getElementById('emailSubject').value  = `Outdoor Play Equipment for ${n}`;
   document.getElementById('emailBody').value     = buildEmailBody(d, s);
-  document.getElementById('emailSubtitle').textContent = `to ${d.site_name || 'daycare'}`;
+  document.getElementById('emailSubtitle').textContent = `to ${n}`;
   document.getElementById('copyOk1').style.display = 'none';
   document.getElementById('emailModal').style.display = 'flex';
 }
-
 function closeEmail() { document.getElementById('emailModal').style.display = 'none'; }
 
 /* ─────────────────────────────────────────────────────
@@ -941,7 +831,7 @@ function closeEmail() { document.getElementById('emailModal').style.display = 'n
 function openSendAll() {
   sendQueue = filtered.filter(d => !d.contacted && !d.responded);
   if (!sendQueue.length) {
-    alert('No uncontacted daycares in the current view.\n\nTry removing the "Hide contacted" filter or selecting a different ZIP code.');
+    alert('No uncontacted facilities in the current view.\n\nTry removing filters or selecting a different city.');
     return;
   }
   sqIndex = 0;
@@ -950,58 +840,43 @@ function openSendAll() {
 }
 
 function loadSqItem() {
-  const d     = sendQueue[sqIndex];
-  const total = sendQueue.length;
-  const pct   = (sqIndex / total) * 100;
-
-  document.getElementById('sqProgressLabel').textContent  = `Email ${sqIndex + 1} of ${total} — ${total - sqIndex - 1} remaining`;
-  document.getElementById('sqProgressFill').style.width   = pct + '%';
-  document.getElementById('sqTo').value      = `${d.site_name || 'Unknown'} — ${d.address || ''} ${d.zip || ''}${d.phone_number ? '  |  ' + d.phone_number : ''}`;
-  document.getElementById('sqSubject').value = `Outdoor Play Equipment for ${d.site_name || 'your facility'}`;
+  const d = sendQueue[sqIndex], total = sendQueue.length;
+  document.getElementById('sqProgressLabel').textContent = `Email ${sqIndex+1} of ${total} — ${total-sqIndex-1} remaining`;
+  document.getElementById('sqProgressFill').style.width  = (sqIndex/total*100) + '%';
+  const n = d.name ? titleCase(d.name) : 'Unnamed facility';
+  document.getElementById('sqTo').value      = `${n} — ${d.address||''} ${d.city ? titleCase(d.city) : ''}${d.phone ? '  |  '+d.phone : ''}`.trim();
+  document.getElementById('sqSubject').value = `Outdoor Play Equipment for ${n}`;
   document.getElementById('sqBody').value    = buildEmailBody(d, getSender());
   document.getElementById('sqCopyOk').style.display = 'none';
 }
 
-function sqAdvance(markAsSent) {
-  if (markAsSent) {
+function sqAdvance(markSent) {
+  if (markSent) {
     const d = sendQueue[sqIndex];
-    contacted.add(d.key); saveContacted();
-    const i = allPrograms.findIndex(x => x.key === d.key);
-    if (i >= 0) allPrograms[i] = { ...allPrograms[i], contacted:true };
-    const j = filtered.findIndex(x => x.key === d.key);
-    if (j >= 0) filtered[j] = { ...filtered[j], contacted:true };
-    const m = markers[d.key];
+    contacted.add(d.id); saveContacted();
+    [allPrograms, filtered].forEach(arr => {
+      const i = arr.findIndex(x => x.id === d.id);
+      if (i>=0) arr[i] = {...arr[i], contacted:true};
+    });
+    const m = markers[d.id];
     if (m) m.setIcon(ICONS.contacted);
   }
   sqIndex++;
   if (sqIndex >= sendQueue.length) {
     closeSendAll();
     renderList(); updateStats();
-    alert(`Campaign complete! You drafted emails for ${sendQueue.length} daycare${sendQueue.length!==1?'s':''}.`);
+    alert(`Campaign complete! Drafted emails for ${sendQueue.length} facilit${sendQueue.length!==1?'ies':'y'}.`);
     return;
   }
   loadSqItem();
 }
 
-function sqSkip()            { sqAdvance(false); }
+function sqSkip()         { sqAdvance(false); }
+function sqCopyAndNext()  { copyEmail('sqSubject','sqBody','sqCopyOk'); setTimeout(()=>sqAdvance(true),600); }
 function sqSend(method) {
-  if (method === 'gmail') {
-    openGmail('sqSubject', 'sqBody');
-  } else {
-    openMailApp('sqSubject', 'sqBody');
-  }
-  setTimeout(() => sqAdvance(true), 400);
+  if (method==='gmail') openGmail('sqSubject','sqBody'); else openMailApp('sqSubject','sqBody');
+  setTimeout(()=>sqAdvance(true), 400);
 }
-
-// Override copyEmail for queue: copy then advance
-const _origCopyEmail = copyEmail;
-document.addEventListener('DOMContentLoaded', () => {});
-// sqCopy handled via copyEmail('sqSubject','sqBody','sqCopyOk') and then advance
-document.querySelector && (function patchSqCopy() {
-  const btn = document.querySelector('[onclick="copyEmail(\'sqSubject\',\'sqBody\',\'sqCopyOk\')"]');
-  if (btn) btn.onclick = () => { _origCopyEmail('sqSubject','sqBody','sqCopyOk'); setTimeout(() => sqAdvance(true), 600); };
-})();
-
 function closeSendAll() {
   document.getElementById('sendAllModal').style.display = 'none';
   renderList(); updateStats();
@@ -1011,41 +886,44 @@ function closeSendAll() {
    Export CSV
 ───────────────────────────────────────────────────── */
 function exportCSV() {
-  const rows = filtered.map(d => [
-    d.site_name        || '',
-    d.address          || '',
-    d.zip              || '',
-    d.phone_number     || '',
-    d.ages_served      || '',
-    d.quality_rating   || 'Licensed',
-    d.priority,
-    d.responded ? 'Responded' : d.contacted ? 'Contacted' : 'Not Contacted',
-    d.latitude  || '',
-    d.longitude || '',
-  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [
+    '"Name","Address","City","ZIP","Phone","Website","Type","Priority","Status","Lat","Lon"',
+    ...filtered.map(d => [
+      d.name||'',
+      d.address||'',
+      d.city||'',
+      d.zip||'',
+      d.phone||'',
+      d.website||'',
+      d.amenity||'',
+      d.priority,
+      d.responded?'Responded':d.contacted?'Contacted':'Not Contacted',
+      d.lat||'',
+      d.lon||'',
+    ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))
+  ].join('\r\n');
 
-  const csv  = ['"Name","Address","ZIP","Phone","Ages","Rating","Priority","Status","Lat","Lng"', ...rows].join('\r\n');
-  const zip  = document.getElementById('zipSelect').value || 'All';
+  const city = document.getElementById('citySelect').value || 'All';
   const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(new Blob([csv], { type:'text/csv' }));
-  a.download = `Chicago_Daycare_Leads_${zip}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.href     = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `Naperville_Daycare_Leads_${city}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
 
 /* ─────────────────────────────────────────────────────
-   Sender details (localStorage)
+   Sender details
 ───────────────────────────────────────────────────── */
 function saveSender() {
-  localStorage.setItem('chi_dc_sender', JSON.stringify({
-    name:    document.getElementById('senderName').value,
+  localStorage.setItem('nap_dc_sender', JSON.stringify({
+    name: document.getElementById('senderName').value,
     company: document.getElementById('senderCompany').value,
-    phone:   document.getElementById('senderPhone').value,
-    email:   document.getElementById('senderEmail').value,
+    phone: document.getElementById('senderPhone').value,
+    email: document.getElementById('senderEmail').value,
   }));
 }
 function loadSender() {
-  const s = JSON.parse(localStorage.getItem('chi_dc_sender') || '{}');
+  const s = JSON.parse(localStorage.getItem('nap_dc_sender')||'{}');
   if (s.name)    document.getElementById('senderName').value    = s.name;
   if (s.company) document.getElementById('senderCompany').value = s.company;
   if (s.phone)   document.getElementById('senderPhone').value   = s.phone;
@@ -1055,16 +933,12 @@ function loadSender() {
 /* ─────────────────────────────────────────────────────
    Utilities
 ───────────────────────────────────────────────────── */
-async function apiFetch(url) {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`API ${r.status}`);
-  return r.json();
-}
-
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
+function titleCase(s) {
+  return s ? s.toLowerCase().replace(/\b([a-z])/g, c=>c.toUpperCase()) : '';
+}
 function setList(html) { document.getElementById('daycareList').innerHTML = html; }
 function showLoading(msg) { document.getElementById('loadingOverlay').style.display='flex'; document.getElementById('loadingText').textContent=msg; }
 function hideLoading()    { document.getElementById('loadingOverlay').style.display='none'; }
@@ -1073,7 +947,7 @@ function hideLoading()    { document.getElementById('loadingOverlay').style.disp
    Init
 ───────────────────────────────────────────────────── */
 loadSender();
-showLoading('Loading Chicago early learning programs…');
+showLoading('Loading Naperville area daycare data…');
 loadAll();
 </script>
 </body>
