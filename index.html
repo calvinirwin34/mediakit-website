@@ -234,6 +234,7 @@
     }
     .btn-em:hover { opacity: 0.86; }
     .btn-copy   { background: #064e3b; color: #fff; }
+    .btn-html   { background: #7c3aed; color: #fff; }
     .btn-mailto { background: #1e40af; color: #fff; }
     .btn-gmail  { background: #dc2626; color: #fff; }
     .btn-skip   { background: #e2e8f0; color: #475569; }
@@ -384,7 +385,8 @@
       <div class="email-field"><label>Body</label><textarea id="emailBody" rows="14"></textarea></div>
     </div>
     <div class="modal-foot">
-      <button class="btn-em btn-copy"   onclick="copyEmail('emailSubject','emailBody','copyOk1')">&#128203; Copy</button>
+      <button class="btn-em btn-copy"   onclick="copyEmail('emailSubject','emailBody','copyOk1')">&#128203; Copy Text</button>
+      <button class="btn-em btn-html"   onclick="copyHtmlEmail('copyOk1')">&#128444; Copy with Photos</button>
       <button class="btn-em btn-mailto" onclick="openMailApp('emailSubject','emailBody')">&#128236; Mail App</button>
       <button class="btn-em btn-gmail"  onclick="openGmail('emailSubject','emailBody')">&#9993; Gmail</button>
       <span class="copy-ok" id="copyOk1">&#10003; Copied!</span>
@@ -410,7 +412,8 @@
     </div>
     <div class="modal-foot">
       <button class="btn-em btn-skip"   onclick="sqSkip()">Skip &rarr;</button>
-      <button class="btn-em btn-copy"   onclick="sqCopyAndNext()">&#128203; Copy &amp; Next</button>
+      <button class="btn-em btn-copy"   onclick="sqCopyAndNext()">&#128203; Copy Text &amp; Next</button>
+      <button class="btn-em btn-html"   onclick="sqCopyHtmlAndNext()">&#128444; Copy with Photos &amp; Next</button>
       <button class="btn-em btn-mailto" onclick="sqSend('mailto')">&#128236; Mail App &amp; Next</button>
       <button class="btn-em btn-gmail"  onclick="sqSend('gmail')">&#9993; Gmail &amp; Next</button>
       <span class="copy-ok" id="sqCopyOk">&#10003; Copied!</span>
@@ -768,7 +771,6 @@ function buildEmailBody(d, s) {
   const dcName  = d.name    ? titleCase(d.name) : 'your facility';
   const city    = d.city    ? titleCase(d.city) : 'your area';
   const address = d.address ? `${d.address}, ${city}` : city;
-  const baseUrl = 'https://calvinirwin34.github.io/mediakit-website/images';
   return `Hi ${dcName} Team!
 
 My name is ${s.name} from ${s.company} — we're a small business that handcrafts made-to-order custom mud kitchens for daycares and preschools right here in the Chicagoland area.
@@ -781,13 +783,6 @@ Here's a taste of what we can customize for you:
   • Working faucet & draining sink
   • ...and anything else you can dream up — bring your ideas and let's get creative!
 
-Check out some of our work below:
-  ${baseUrl}/mud-kitchen-main.jpg
-  ${baseUrl}/mud-kitchen-1.jpg
-  ${baseUrl}/mud-kitchen-3.jpg
-  ${baseUrl}/mud-kitchen-4.jpg
-  ${baseUrl}/mud-kitchen-best.jpg
-
 Delivery is available to the Chicagoland area for an additional fee.
 
 If you're interested in adding a unique, hands-on outdoor play feature that kids absolutely go wild for, I'd love to chat! Feel free to reply here or give me a call at ${s.phone}.
@@ -798,6 +793,57 @@ ${s.name}
 ${s.company}
 ${s.phone}
 ${s.email}`;
+}
+
+function buildEmailHtml(d, s) {
+  const dcName  = d.name ? titleCase(d.name) : 'your facility';
+  const city    = d.city ? titleCase(d.city) : 'your area';
+  const base    = 'https://calvinirwin34.github.io/mediakit-website/images';
+  const photos  = [
+    'mud-kitchen-main.jpg',
+    'mud-kitchen-1.jpg',
+    'mud-kitchen-3.jpg',
+    'mud-kitchen-4.jpg',
+    'mud-kitchen-best.jpg'
+  ];
+  const imgTags = photos.map(p =>
+    `<img src="${base}/${p}" alt="Custom mud kitchen" style="width:260px;height:195px;object-fit:cover;border-radius:8px;margin:6px;" />`
+  ).join('');
+  const plain = buildEmailBody(d, s)
+    .replace(/\n  • /g, '</li><li>')
+    .replace(/\n/g, '<br>');
+  return `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;font-size:15px;color:#222;max-width:600px;margin:0 auto;padding:20px">
+<p>${plain}</p>
+<br>
+<p style="font-weight:bold;margin-bottom:8px">📸 A look at our work:</p>
+<div style="display:flex;flex-wrap:wrap;gap:6px">${imgTags}</div>
+</body></html>`;
+}
+
+function copyHtmlEmail(okId) {
+  const d = currentEmailFacility;
+  const s = getSender();
+  const html = buildEmailHtml(d, s);
+  const blob = new Blob([html], { type: 'text/html' });
+  navigator.clipboard.write([new ClipboardItem({ 'text/html': blob })]).then(() => {
+    const ok = document.getElementById(okId);
+    ok.textContent = '✓ Copied with photos! Paste into Gmail.';
+    ok.style.display = 'inline';
+    setTimeout(() => { ok.style.display = 'none'; ok.textContent = '✓ Copied!'; }, 4000);
+  });
+}
+
+function sqCopyHtmlAndNext() {
+  const d = sendQueue[sqIndex];
+  const s = getSender();
+  const html = buildEmailHtml(d, s);
+  const blob = new Blob([html], { type: 'text/html' });
+  navigator.clipboard.write([new ClipboardItem({ 'text/html': blob })]).then(() => {
+    const ok = document.getElementById('sqCopyOk');
+    ok.textContent = '✓ Copied with photos!';
+    ok.style.display = 'inline';
+    setTimeout(() => { ok.style.display = 'none'; ok.textContent = '✓ Copied!'; sqAdvance(true); }, 600);
+  });
 }
 
 function copyEmail(subjectId, bodyId, okId) {
@@ -818,9 +864,11 @@ function openGmail(subId, bodyId) {
 /* ─────────────────────────────────────────────────────
    Single email modal
 ───────────────────────────────────────────────────── */
+let currentEmailFacility = null;
 function openEmail(id) {
   const d = allPrograms.find(x => x.id === id);
   if (!d) return;
+  currentEmailFacility = d;
   map.closePopup();
   const s = getSender();
   const n = d.name ? titleCase(d.name) : 'the daycare';
