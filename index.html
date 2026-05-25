@@ -768,25 +768,24 @@ function buildEmailBody(d, s) {
   const dcName  = d.name    ? titleCase(d.name) : 'your facility';
   const city    = d.city    ? titleCase(d.city) : 'your area';
   const address = d.address ? `${d.address}, ${city}` : city;
-  return `Dear ${dcName} Team,
+  return `Hi ${dcName} Team!
 
-I hope this message finds you well. My name is ${s.name}, and I represent ${s.company}, a provider of high-quality outdoor play equipment for early childhood learning environments.
+My name is ${s.name} from ${s.company} — we're a small business that handcrafts made-to-order custom mud kitchens for daycares and preschools right here in the Chicagoland area.
 
-We work with daycare centers and preschools across the greater Naperville area to design and install safe, durable, and engaging play spaces that children love — fully meeting ASTM and CPSC safety standards.
+I came across ${dcName} in ${city} and thought your kids would absolutely love one! Our mud kitchens are built from 100% cedar with stainless steel fasteners so they're built to last through years of outdoor play. Every piece is made to order, so we can bring your vision to life exactly the way you want it.
 
-I came across ${dcName} at ${address}, and I'd love to discuss how we could enhance your outdoor play area. Whether you're looking to replace aging equipment, expand your current setup, or start from scratch, we offer a free site visit and no-obligation quote.
+Here's a taste of what we can customize for you:
+  • Stove & oven
+  • Upper cabinets
+  • Working faucet & draining sink
+  • ...and anything else you can dream up — bring your ideas and let's get creative!
 
-Here's what we provide:
-  • Custom play area layouts designed for your available space
-  • Professional installation by our certified team
-  • Full warranty and ongoing maintenance support
-  • Flexible financing options to fit any budget
+Delivery is available to the Chicagoland area for an additional fee.
 
-I'd love to schedule a quick call or site visit at your convenience. Please reach me at ${s.phone} or reply to this email at ${s.email}.
+If you're interested in adding a unique, hands-on outdoor play feature that kids absolutely go wild for, I'd love to chat! Feel free to reply here or give me a call at ${s.phone}.
 
-Thank you for the amazing work you do for children in our community. I look forward to connecting!
+Thanks so much for all you do for the little ones — hope to connect soon!
 
-Warm regards,
 ${s.name}
 ${s.company}
 ${s.phone}
@@ -817,7 +816,7 @@ function openEmail(id) {
   map.closePopup();
   const s = getSender();
   const n = d.name ? titleCase(d.name) : 'the daycare';
-  document.getElementById('emailSubject').value  = `Outdoor Play Equipment for ${n}`;
+  document.getElementById('emailSubject').value  = `Custom Mud Kitchens for ${n} 🌿`;
   document.getElementById('emailBody').value     = buildEmailBody(d, s);
   document.getElementById('emailSubtitle').textContent = `to ${n}`;
   document.getElementById('copyOk1').style.display = 'none';
